@@ -1,0 +1,42 @@
+[
+  {
+    "name": "guilds",
+    "columns": [
+      {
+        "name": "guild",
+        "type": "string",
+        "primary": true
+      },
+      {
+        "name": "channel",
+        "type": "string"
+      },
+      {
+        "name": "room",
+        "type": "text"
+      },
+      {
+        "name": "adminrole",
+        "type": "text"
+      }
+    ]
+  },
+  {
+    "name": "rooms",
+    "columns": [
+      {
+        "name": "name",
+        "type": "text",
+        "primary": true
+      },
+      {
+        "name": "pass",
+        "type": "text"
+      },
+      {
+        "name": "owner",
+        "type": "string"
+      }
+    ]
+  }
+]
