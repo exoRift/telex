@@ -1,6 +1,8 @@
 const {
   TOKEN,
-  DATABASE_URL
+  DATABASE_URL,
+  DBL_TOKEN,
+  PREFIX
 } = process.env
 
 const Eris = require('Eris')
@@ -8,8 +10,8 @@ const {
   Agent
 } = require('cyclone-engine')
 
-const data = require('data')
-const databaseTables = require('data/tables.json')
+const data = require('./src/data')
+const databaseTables = require('./src/data/tables.json')
 
 const agent = new Agent({
   Eris,
@@ -21,6 +23,10 @@ const agent = new Agent({
     tables: databaseTables
   },
   agentOptions: {
-
+    prefix: PREFIX,
+    dblToken: DBL_TOKEN,
+    logFunction: (msg, { command }) => `${msg.timestamp} - **${msg.author.username}** > *${command.name}*`
   }
 })
+
+agent.connect()
