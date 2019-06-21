@@ -1,9 +1,15 @@
 const { join } = require('path')
 
 const {
+  PREFIX,
+  SUPPORT_SERVER
+} = process.env
+
+const {
   Command,
   Await
 } = require('cyclone-engine')
+
 const {
   prefixIcon,
   helpIcon
@@ -28,15 +34,15 @@ const data = {
       }
       fields[index] += (fields[index].length ? '\n' : '') + content
     }
-    fields.push('**Replacers:**\n*Inserts live data values into commands. `|REPLACERNAME|` (IN requires a number)*\n\n' + [...replacers.values()].reduce((a, e) => `${a}**${e.key}** - *${e.description}*\n`, ''))
+    fields.push('**Replacers:**\n*Inserts live data values into commands. `|REPLACERNAME|`*\n\n' + [...replacers.values()].reduce((a, e) => `${a}**${e.info}*\n`, ''))
     const embed = {
       title: '*[Click for support]* Made by mets11rap',
       description: `${client.user.username} is a bot that can allow you to set up rooms that guilds can connect to and have chat across all connected guilds. Click [here](https://discordbots.org/bot/${client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
-      url: 'https://discord.gg/' + process.env.SUPPORT_SERVER,
+      url: 'https://discord.gg/' + SUPPORT_SERVER,
       color: 33023,
       footer: {
         icon_url: prefixIcon,
-        text: `Prefix: "${process.env.PREFIX}" or mention | <> = Mandatory () = Optional`
+        text: `Prefix: "${PREFIX}" or mention | <> = Mandatory () = Optional`
       },
       thumbnail: {
         url: client.user.dynamicAvatarURL('png')
@@ -54,10 +60,11 @@ const data = {
     }
 
     const wait = new Await({
-      check: ({ msg, prefix }) => msg.content.startsWith(prefix + 'help'),
       time: 15000,
       options: {
-        args: [{ name: 'page #' }]
+        check: ({ msg, prefix }) => msg.content.startsWith(prefix + 'help'),
+        args: [{ name: 'page #' }],
+        refreshOnUse: true
       },
       action: ({ msg, args: [num], lastResponse }) => {
         embed.fields = [
@@ -67,7 +74,6 @@ const data = {
           }
         ]
         lastResponse.edit({ embed })
-        return { wait }
       }
     })
 
