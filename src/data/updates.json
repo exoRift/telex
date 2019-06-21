@@ -1,0 +1,22 @@
+{
+  "0.0.5": {
+    "date": "TBD",
+    "notes": "Bot overhaul\nRewritten on Cyclone Engine: https://github.com/mets11rap/cyclone-engine"
+  },
+  "0.0.4": {
+    "date": "8/16/18",
+    "notes": "Fixed something in the help menu\nAdded the room invite command\nOptimized the database getting system to be faster and more efficient\nMade the shards command more efficient\nCode improvements"
+  },
+  "0.0.3": {
+    "date": "8/14/18",
+    "notes": "Updated database system\nChanged the way rooms store data\nImproved flexibility of ping command to make possibility for sharding\nAdded 2 commands:\n  dblwidget\n  shards\nGeneral code improvements\nCompensated for guild/channel deletion while bot is offline\nFixed the help menu"
+  },
+  "0.0.2": {
+    "date": "7/19/18",
+    "notes": "Changed room edit to room pass\nFixed an error in the updates\nAdded room channel\nImproved some code with functions\nFixed bug when joining and setting a designated channel\nRevamped the room system\nFixed bug with kicking\nAdded player icon and status to the find command\n--- WARNING: This build can be unstable due to the system revamp. PLEASE report any bugs found."
+  },
+  "0.0.1": {
+    "date": "7/17/18",
+    "notes": "Added base"
+  }
+}
