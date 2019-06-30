@@ -28,7 +28,7 @@ const data = {
     args: [{ name: 'code' }],
     restricted: true
   },
-  action: async ({ agent, client, commands, replacers, msg, args: [code] }) => {
+  action: async ({ agent, client, commands, replacers, msg, args: [code], knex }) => {
     let result
     try {
       result = await eval(code) // eslint-disable-line

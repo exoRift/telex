@@ -28,8 +28,29 @@ const statusEmojis = {
   offline: '<a:Offline:469626088662892554>'
 }
 
+/**
+ * Transmit a message across a room.
+ * @param   {Object}       data        The data for the transmission.
+ * @prop    {Eris.Client}  data.client The Eris client.
+ * @prop    {QueryBuilder} data.knex   The simple-knex query builder.
+ * @prop    {String}       data.room   The room to transmit the message to.
+ * @prop    {Object}       data.msg    The message to transmit.
+ */
+function transmit ({ client, knex, room, msg }) {
+  return knex.select({
+    table: 'guilds',
+    columns: 'channel',
+    where: {
+      room
+    }
+  }).then((channels) => {
+    for (const channel of channels) client.createMessage(channel, msg)
+  })
+}
+
 module.exports = {
   links,
   readAndRequireDir,
-  statusEmojis
+  statusEmojis,
+  transmit
 }
