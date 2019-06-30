@@ -17,7 +17,7 @@
       },
       {
         "name": "adminrole",
-        "type": "text"
+        "type": "string"
       }
     ]
   },
