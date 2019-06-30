@@ -15,7 +15,7 @@ const data = {
     const latencyAverage = latencies.reduce((a, e) => a + e, 0) / latencies.length
     const fields = client.shards.map((shard) => {
       return {
-        name: `${msg.channel.type === 0 && shard.id === msg.channel.guild.shard.id ? '*' : ''}Shard ${shard.id}`,
+        name: `${!msg.channel.type && shard.id === msg.channel.guild.shard.id ? '*' : ''}Shard ${shard.id}`,
         value: `${shard.ready ? statusEmojis.online : statusEmojis.dnd} ${shard.ready ? shard.latency : 'OFFLINE'}ms`,
         inline: true
       }
