@@ -21,7 +21,7 @@ const data = {
             return knex.update({
               table: 'guilds',
               where: {
-                guild: msg.channel.guild.id
+                id: msg.channel.guild.id
               },
               data: {
                 adminrole: role.id

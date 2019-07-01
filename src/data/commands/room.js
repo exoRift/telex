@@ -20,14 +20,14 @@ const data = {
     let guildData = await knex.get({
       table: 'guilds',
       where: {
-        guild: msg.channel.guild.id
+        id: msg.channel.guild.id
       }
     })
 
     if (!guildData) {
       const room = `${msg.author.username}#${msg.author.discriminator}'s room`
       guildData = {
-        guild: msg.channel.guild.id,
+        id: msg.channel.guild.id,
         channel: msg.channel.id,
         room,
         abbreviation: abbreviate(msg.channel.guild.name)

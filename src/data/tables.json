@@ -3,7 +3,7 @@
     "name": "guilds",
     "columns": [
       {
-        "name": "guild",
+        "name": "id",
         "type": "string",
         "primary": true
       },
