@@ -30,17 +30,20 @@ const data = {
   },
   action: async ({ agent, client, commands, replacers, msg, args: [code], knex }) => {
     let result
+    const startTime = Date.now()
     try {
       result = await eval(code) // eslint-disable-line
     } catch (err) {
       result = err
     }
+    const stopTime = Date.now()
     let output
     if (result instanceof Error || result instanceof Promise) output = String(result)
     else output = inspect(result)
 
     return {
       embed: {
+        title: `Time taken: **${(stopTime - startTime) / 1000}** seconds`,
         color: result instanceof Error ? 16711680 : 65280,
         footer: {
           text: 'Type: ' + (result instanceof Array ? 'array' : result instanceof Error ? 'error' : typeof result)
