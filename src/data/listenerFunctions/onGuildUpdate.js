@@ -7,7 +7,7 @@ module.exports = (agent, guild, oldGuild) => {
     agent._knex.update({
       table: 'guilds',
       where: {
-        guild: guild.id
+        id: guild.id
       },
       data: {
         abbreviation: abbreviate(guild.name)
