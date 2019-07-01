@@ -1,3 +1,3 @@
-const { readAndRequireDir } = require('../utils')
+const { requireDirToArray } = require('../utils')
 
-module.exports = readAndRequireDir(__dirname)
+module.exports = requireDirToArray(__dirname)

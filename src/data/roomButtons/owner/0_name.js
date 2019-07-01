@@ -25,6 +25,7 @@ const data = {
         action: async ({ client, msg, args: [name], knex }) => {
           const room = await knex.get({
             table: 'rooms',
+            columns: 'name',
             where: {
               owner: msg.channel.guild.id
             }
