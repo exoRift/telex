@@ -18,6 +18,10 @@
       {
         "name": "adminrole",
         "type": "string"
+      },
+      {
+        "name": "abbreviation",
+        "type": "string"
       }
     ]
   },

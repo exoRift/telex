@@ -7,7 +7,11 @@ const {
 const {
   ownerButtons,
   memberButtons
-} = require('../roomButtons.js')
+} = require('../roomButtons')
+
+const {
+  abbreviate
+} = require('../utils.js')
 
 const data = {
   name: 'room',
@@ -22,20 +26,16 @@ const data = {
 
     if (!guildData) {
       const room = `${msg.author.username}#${msg.author.discriminator}'s room`
+      guildData = {
+        guild: msg.channel.guild.id,
+        channel: msg.channel.id,
+        room,
+        abbreviation: abbreviate(msg.channel.guild.name)
+      }
 
       await knex.insert({
         table: 'guilds',
-        data: {
-          guild: msg.channel.guild.id,
-          channel: msg.channel.id,
-          room
-        }
-      })
-      guildData = await knex.get({
-        table: 'guilds',
-        where: {
-          guild: msg.channel.guild.id
-        }
+        data: guildData
       })
 
       await knex.insert({
@@ -55,7 +55,7 @@ const data = {
       }
     })
 
-    if (guildData.adminrole ? !msg.member.roles.map((r) => r.id).includes(guildData.adminrole) : msg.author.id !== msg.channel.guild.ownerID) return '`You are unauthorized to do that`'
+    if (!msg.member.roles.includes(guildData.adminrole) && msg.author.id !== msg.channel.guild.ownerID) return '`You are unauthorized to do that`'
 
     const isOwner = msg.channel.guild.id === roomData.owner
     const buttons = isOwner ? ownerButtons : memberButtons
@@ -63,12 +63,13 @@ const data = {
     return {
       embed: {
         title: `**${roomData.name}**`,
+        color: isOwner ? 4980889 : undefined,
         author: {
           name: 'Room Control Panel',
           icon_url: msg.channel.guild.iconURL
         },
         footer: {
-          text: 'You are ' + (isOwner ? 'the owner' : 'a member')
+          text: `${isOwner ? '👑 ' : ''}You are ${isOwner ? 'the owner' : 'a member'} of the room`
         },
         thumbnail: {
           url: client.guilds.find((g) => g.id === roomData.owner).iconURL
@@ -76,7 +77,8 @@ const data = {
         fields: buttons.map((b) => {
           return {
             name: `${b.emoji} **${b.name}**`,
-            value: b.value ? b.value({ guildData, roomData }) : '​'
+            value: b.value ? b.value({ client, msg, guildData, roomData }) : '​',
+            inline: true
           }
         })
       },
