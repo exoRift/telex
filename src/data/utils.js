@@ -1,21 +1,36 @@
 const { readdirSync } = require('fs')
 const { join } = require('path')
 
+const filenameRegex = /(.+?)\.js$/
+
 const links = {
   pingIcon: 'https://i.imgur.com/SCCJ8qs.gif',
-  prefixIcon: 'https://theasciicode.com.ar/ascii-codes/vertical-bar-vbar-vertical-line-vertical-slash-ascii-code-124.gif',
-  helpIcon: 'http://images.clipartpanda.com/liberation-clipart-free-vector-question-mark-icon-clip-art_104760_Question_Mark_Icon_clip_art_hight.png'
+  prefixIcon: 'https://i.imgur.com/GT1v7rD.png'
 }
 /**
- * Require every js file in a directory.
+ * Require every js file in a directory and push them to an array.
  * @param   {String} path The directory to read.
  * @returns {*[]}         The resulting array.
  */
-function readAndRequireDir (path) {
+function requireDirToArray (path) {
   const content = []
   const files = readdirSync(path)
   for (let i = 0; i < files.length; i++) {
     if (files[i] !== 'index.js') content.push(require(join(path, files[i])))
+  }
+  return content
+}
+
+/**
+ * Require every js file in a directory and return an object with the filenames as keys and the exports as values.
+ * @param   {String} path The directory to read.
+ * @returns {Object}      The resulting object.
+ */
+function requireDirToObject (path) {
+  const content = {}
+  const files = readdirSync(path)
+  for (let i = 0; i < files.length; i++) {
+    if (files[i] !== 'index.js') content[files[i].match(filenameRegex)[1]] = require(join(path, files[i]))
   }
   return content
 }
@@ -30,11 +45,12 @@ const statusEmojis = {
 
 /**
  * Transmit a message across a room.
- * @param   {Object}       data        The data for the transmission.
- * @prop    {Eris.Client}  data.client The Eris client.
- * @prop    {QueryBuilder} data.knex   The simple-knex query builder.
- * @prop    {String}       data.room   The room to transmit the message to.
- * @prop    {Object}       data.msg    The message to transmit.
+ * @param   {Object}                  data        The data for the transmission.
+ * @prop    {Eris.Client}             data.client The Eris client.
+ * @prop    {QueryBuilder}            data.knex   The simple-knex query builder.
+ * @prop    {String}                  data.room   The room to transmit the message to.
+ * @prop    {Object}                  data.msg    The message to transmit.
+ * @returns {Promise<Eris.Message[]>}             An array of all messages sent.
  */
 function transmit ({ client, knex, room, msg }) {
   return knex.select({
@@ -44,13 +60,28 @@ function transmit ({ client, knex, room, msg }) {
       room
     }
   }).then((channels) => {
-    for (const channel of channels) client.createMessage(channel, msg)
+    const promises = []
+
+    for (const channel of channels) promises.push(client.createMessage(channel.channel, msg))
+
+    return Promise.all(promises)
   })
+}
+
+/**
+ * Abbreviate a name.
+ * @param   {String} name The name to abbreviate.
+ * @returns {String}      The abbreviated result.
+ */
+function abbreviate (name) {
+  return name.split(' ').reduce((a, e) => a + e[0], '')
 }
 
 module.exports = {
   links,
-  readAndRequireDir,
+  requireDirToArray,
+  requireDirToObject,
   statusEmojis,
-  transmit
+  transmit,
+  abbreviate
 }
