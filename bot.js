@@ -13,6 +13,10 @@ const {
 const data = require('./src/data')
 const databaseTables = require('./src/data/tables.json')
 
+const {
+  onGuildUpdate
+} = require('./src/data/listenerFunctions')
+
 const agent = new Agent({
   Eris,
   token: TOKEN,
@@ -28,5 +32,7 @@ const agent = new Agent({
     logFunction: (msg, { command }) => `${msg.timestamp} - **${msg.author.username}** > *${command.name}*`
   }
 })
+
+agent._client.on('guildUpdate', onGuildUpdate.bind(this, agent))
 
 agent.connect()
