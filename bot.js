@@ -15,7 +15,7 @@ const databaseTables = require('./src/data/tables.json')
 
 const {
   transmit
-} = require('data/utils.js')
+} = require('./src/data/utils.js')
 
 const {
   onGuildUpdate
