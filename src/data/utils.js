@@ -45,15 +45,14 @@ const statusEmojis = {
 
 /**
  * Transmit a message across a room.
+ * @this    agent
  * @param   {Object}                  data        The data for the transmission.
- * @prop    {Eris.Client}             data.client The Eris client.
- * @prop    {QueryBuilder}            data.knex   The simple-knex query builder.
  * @prop    {String}                  data.room   The room to transmit the message to.
  * @prop    {Object}                  data.msg    The message to transmit.
  * @returns {Promise<Eris.Message[]>}             An array of all messages sent.
  */
-function transmit ({ client, knex, room, msg }) {
-  return knex.select({
+function transmit ({ room, msg }) {
+  return this._knex.select({
     table: 'guilds',
     columns: 'channel',
     where: {
@@ -62,7 +61,7 @@ function transmit ({ client, knex, room, msg }) {
   }).then((channels) => {
     const promises = []
 
-    for (const channel of channels) promises.push(client.createMessage(channel.channel, msg))
+    for (const channel of channels) promises.push(this._client.createMessage(channel.channel, msg))
 
     return Promise.all(promises)
   })

@@ -3,10 +3,6 @@ const {
 } = require('cyclone-engine')
 
 const {
-  transmit
-} = require('../../utils.js')
-
-const {
   deleteRoom
 } = require('../../alerts')
 
@@ -29,9 +25,9 @@ const data = {
           timeout: 10000,
           args: [{ name: 'password', mand: true }]
         },
-        action: async ({ client, args: [password] }) => {
+        action: async ({ agent, args: [password] }) => {
           if (password === pass) {
-            await transmit({ client, knex, room: name, msg: { embed: deleteRoom({ roomName: name }) } })
+            await agent.transmit({ room: name, msg: deleteRoom({ roomName: name }) })
 
             await knex.delete({
               table: 'rooms',

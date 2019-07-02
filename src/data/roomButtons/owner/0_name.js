@@ -3,10 +3,6 @@ const {
 } = require('cyclone-engine')
 
 const {
-  transmit
-} = require('../../utils.js')
-
-const {
   rename
 } = require('../../alerts')
 
@@ -14,7 +10,7 @@ const data = {
   name: 'Name',
   value: ({ roomData }) => roomData.name,
   emoji: '📝',
-  action: ({ reactInterface }) => {
+  action: ({ agent, reactInterface }) => {
     return {
       content: 'Type a new name for your room (Cancels after 10 seconds): ',
       wait: new Await({
@@ -50,7 +46,7 @@ const data = {
                   room: name
                 }
               }).then(() => {
-                transmit({ client, knex, room: name, msg: { embed: rename({ oldName: room.name, newName: name }) } })
+                agent.transmit({ room: name, msg: rename({ oldName: room.name, newName: name }) })
 
                 return `Successfully changed room name from \`${room.name}\` to \`${name}\``
               })
