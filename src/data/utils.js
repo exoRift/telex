@@ -5,7 +5,8 @@ const filenameRegex = /(.+?)\.js$/
 
 const links = {
   pingIcon: 'https://i.imgur.com/SCCJ8qs.gif',
-  prefixIcon: 'https://i.imgur.com/GT1v7rD.png'
+  prefixIcon: 'https://i.imgur.com/GT1v7rD.png',
+  inviteIcon: 'https://i.imgur.com/dd1G7Cw.png'
 }
 /**
  * Require every js file in a directory and push them to an array.
