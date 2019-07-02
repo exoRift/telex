@@ -80,8 +80,11 @@ const data = {
       wait,
       reactInterface: new ReactInterface({
         buttons,
-        restricted: true,
-        designatedUsers: msg.author.id
+        options: {
+          restricted: true,
+          designatedUsers: msg.author.id,
+          removeReaction: true
+        }
       })
     }
   }
