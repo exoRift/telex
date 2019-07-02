@@ -24,9 +24,9 @@ const data = {
             where: {
               id: msg.channel.guild.id
             }
-          }).then(({ room }) => {
+          }).then(({ room }) =>
             agent.transmit({ room, msg: announce({ guildName: msg.channel.guild.name, content: announcement }) })
-          })
+          )
         }
       })
     }

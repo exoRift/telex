@@ -27,6 +27,8 @@ const data = {
           args: [{ name: 'pass', mand: true }]
         },
         action: ({ args: [pass] }) => {
+          if (pass.includes(' ')) return '`Password cannot contain spaces.`'
+
           return knex.update({
             table: 'rooms',
             where: {

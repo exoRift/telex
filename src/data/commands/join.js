@@ -46,6 +46,7 @@ const data = {
       })
 
       if (msg.channel.guild.id === owner) return '`You can\'t join a room when you own one.`'
+      if (guild.room === roomName) return `\`You are already in ${roomName}.\``
 
       const buttons = [
         new ReactCommand({
@@ -63,7 +64,7 @@ const data = {
               }
             })
 
-            return agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }).then(() => `Successfully joined ${roomName}.`)
+            return agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }).then(() => `Successfully joined **${roomName}**.`)
           }
         }),
         new ReactCommand({
@@ -82,7 +83,7 @@ const data = {
             designatedUsers: guild.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
               if (roles.find((r) => r === guild.adminrole)) accum.push(id)
               return accum
-            }, []) : msg.channel.guild.ownerID
+            }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
           }
         })
       }
@@ -107,7 +108,7 @@ const data = {
 
       agent.transmit({ room: roomName, msg: join(msg.channel.guild.name, guildsInRoom.length) })
 
-      return `Successfully joined ${roomName}.`
+      return `Successfully joined **${roomName}**.`
     })
   }
 }
