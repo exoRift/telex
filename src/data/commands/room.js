@@ -87,9 +87,10 @@ const data = {
         options: {
           restricted: true,
           designatedUsers: guildData.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-            if (roles.find((r) => r.id === guildData.adminrole)) accum.push(id)
+            if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
             return accum
-          }, []) : msg.channel.guild.ownerID
+          }, []) : msg.channel.guild.ownerID,
+          removeReaction: true
         }
       })
     }
