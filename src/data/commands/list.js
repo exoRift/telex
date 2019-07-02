@@ -7,7 +7,7 @@ const data = {
   action: async ({ client, msg, knex }) => {
     const guilds = await knex.select({
       table: 'guilds',
-      columns: ['id,', 'room', 'abbreviation']
+      columns: ['id', 'room', 'abbreviation']
     })
 
     const room = await knex.get({
@@ -19,7 +19,7 @@ const data = {
     })
 
     return '```\n' +
-      guilds.reduce((a, e) => e.room === room.name ? `${a}${(e.id === room.owner ? '👑' : '')}${client.guilds.get(e.id).name}\n` : a, '') +
+      guilds.reduce((a, e) => e.room === room.name ? `${a}${(e.id === room.owner ? '👑 ' : '')}${client.guilds.get(e.id).name} - ${e.abbreviation}\n` : a, '') +
       '```'
   }
 }
