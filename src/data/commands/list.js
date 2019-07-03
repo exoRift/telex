@@ -1,6 +1,4 @@
-const {
-  Command
-} = require('cyclone-engine')
+const { Command } = require('cyclone-engine')
 
 const data = {
   name: 'list',
@@ -19,7 +17,7 @@ const data = {
     })
 
     return '```\n' +
-      guilds.reduce((a, e) => e.room === room.name ? `${a}${(e.id === room.owner ? '👑 ' : '')}${client.guilds.get(e.id).name} - ${e.abbreviation}\n` : a, '') +
+      guilds.reduce((a, g) => g.room === room.name ? `${a}${(g.id === room.owner ? '👑 ' : '')}${client.guilds.get(g.id).name} - ${g.abbreviation}\n` : a, '') +
       '```'
   }
 }

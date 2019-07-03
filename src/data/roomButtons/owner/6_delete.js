@@ -1,10 +1,6 @@
-const {
-  Await
-} = require('cyclone-engine')
+const { Await } = require('cyclone-engine')
 
-const {
-  deleteRoom
-} = require('../../alerts')
+const { deleteRoom } = require('../../alerts')
 
 const data = {
   name: 'Delete',

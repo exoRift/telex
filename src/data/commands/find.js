@@ -1,6 +1,4 @@
-const {
-  Command
-} = require('cyclone-engine')
+const { Command } = require('cyclone-engine')
 
 const {
   statusEmojis
