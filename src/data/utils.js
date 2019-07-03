@@ -93,7 +93,7 @@ async function compileMessage (msg) {
  * @prop    {Object}                  data.msg    The message to transmit.
  * @returns {Promise<Eris.Message[]>}             An array of all messages sent.
  */
-function transmit ({ room, msg, exclude }) {
+function transmit ({ room, msg, exclude = '' }) {
   return this._knex.select({
     table: 'guilds',
     columns: 'channel',
