@@ -5,7 +5,7 @@ const {
   PREFIX
 } = process.env
 
-const Eris = require('Eris')
+const Eris = require('eris')
 const { Agent } = require('cyclone-engine')
 
 const data = require('./src/data')
