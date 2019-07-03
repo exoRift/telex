@@ -24,40 +24,42 @@ const data = {
       }
     })
 
-    if (!guildData && msg.author.id === msg.channel.guild.ownerID) {
-      const room = `${msg.author.username}#${msg.author.discriminator}'s room`
+    if (!guildData) {
+      if (msg.author.id === msg.channel.guild.ownerID) {
+        const room = `${msg.author.username}#${msg.author.discriminator}'s room`
 
-      const existing = await knex.get({
-        table: 'rooms',
-        columns: 'pass',
-        where: {
-          name: room
-        }
-      })
-
-      if (existing) await join.action({ agent, client, msg, args: [room, existing.pass], knex })
-      else {
-        guildData = {
-          id: msg.channel.guild.id,
-          channel: msg.channel.id,
-          room,
-          abbreviation: abbreviate(msg.channel.guild.name)
-        }
-
-        await knex.insert({
-          table: 'guilds',
-          data: guildData
-        })
-
-        await knex.insert({
+        const existing = await knex.get({
           table: 'rooms',
-          data: {
-            name: room,
-            pass: '1234',
-            owner: msg.channel.guild.id
+          columns: 'pass',
+          where: {
+            name: room
           }
         })
-        msg.channel.createMessage('Room created! By default, your password is `1234`.')
+
+        if (existing) await join.action({ agent, client, msg, args: [room, existing.pass], knex })
+        else {
+          guildData = {
+            id: msg.channel.guild.id,
+            channel: msg.channel.id,
+            room,
+            abbreviation: abbreviate(msg.channel.guild.name)
+          }
+
+          await knex.insert({
+            table: 'guilds',
+            data: guildData
+          })
+
+          await knex.insert({
+            table: 'rooms',
+            data: {
+              name: room,
+              pass: '1234',
+              owner: msg.channel.guild.id
+            }
+          })
+          msg.channel.createMessage('Room created! By default, your password is `1234`.')
+        }
       }
     }
 
