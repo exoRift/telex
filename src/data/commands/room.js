@@ -24,7 +24,7 @@ const data = {
       }
     })
 
-    if (!guildData) {
+    if (!guildData && msg.author.id === msg.channel.guild.ownerID) {
       const room = `${msg.author.username}#${msg.author.discriminator}'s room`
 
       const existing = await knex.get({
