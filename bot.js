@@ -6,15 +6,14 @@ const {
 } = process.env
 
 const Eris = require('Eris')
-const {
-  Agent
-} = require('cyclone-engine')
+const { Agent } = require('cyclone-engine')
 
 const data = require('./src/data')
 const databaseTables = require('./src/data/tables.json')
 
 const {
-  transmit
+  transmit,
+  compileMessage
 } = require('./src/data/utils.js')
 
 const {
@@ -35,10 +34,18 @@ const agent = new Agent({
   agentOptions: {
     prefix: PREFIX,
     dblToken: DBL_TOKEN,
-    logFunction: (msg, { command }) => `${msg.timestamp} - **${msg.author.username}** > *${command.name}*`
+    postMessageFunction: (msg, res) => {
+      if (res && res.command) {
+        console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name}*`)
+      } else if ((msg.content || msg.attachments.length) && !msg.type) {
+        compileMessage.call(agent, msg)
+          .then(agent.transmit)
+          .catch((ignore) => ignore)
+      }
+    }
   }
 })
-agent.transmit = transmit
+agent.transmit = transmit.bind(agent)
 
 agent._client.on('guildUpdate', onGuildUpdate.bind(agent))
 agent._client.on('guildDelete', onGuildDelete.bind(agent))
