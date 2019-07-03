@@ -1,6 +1,6 @@
 {
   "0.0.5": {
-    "date": "TBD",
+    "date": "7/3/19",
     "notes": "Bot overhaul\nRewritten on Cyclone Engine: https://github.com/mets11rap/cyclone-engine\nRoom management is now centralized in one control panel\nYou can now customize your guild abbreviation\nYou can now assign a role access to room management\nRedid the update system\nThe bot is now on a public repository: https://github.com/mets11rap/guildlink"
   },
   "0.0.4": {

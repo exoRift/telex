@@ -13,7 +13,7 @@ const {
 
 const data = {
   name: 'join',
-  description: 'Join a room.',
+  desc: 'Join a room.',
   options: {
     args: [{ name: 'room', mand: true }, { name: 'password', mand: true }]
   },
