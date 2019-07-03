@@ -87,27 +87,33 @@ const data = {
       }
     }
 
-    return knex.insert({
-      table: 'guilds',
-      data: {
-        id: msg.channel.guild.id,
-        channel: !msg.channel.permissionsOf(client.user.id).has('sendMessages') ? msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type) : msg.channel.id,
-        room: roomName,
-        abbreviation: abbreviate(msg.channel.guild.name)
-      }
-    }).then(async () => {
-      const guildsInRoom = await knex.select({
+    const channel = msg.channel.permissionsOf(client.user.id).has('sendMessages')
+      ? msg.channel.id
+      : msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type)
+
+    if (channel) {
+      return knex.insert({
         table: 'guilds',
-        columns: 'id',
-        where: {
-          room: roomName
+        data: {
+          id: msg.channel.guild.id,
+          channel,
+          room: roomName,
+          abbreviation: abbreviate(msg.channel.guild.name)
         }
+      }).then(async () => {
+        const guildsInRoom = await knex.select({
+          table: 'guilds',
+          columns: 'id',
+          where: {
+            room: roomName
+          }
+        })
+  
+        agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guildsInRoom.length }) })
+  
+        return `Successfully joined **${roomName}**.`
       })
-
-      agent.transmit({ room: roomName, msg: join(msg.channel.guild.name, guildsInRoom.length) })
-
-      return `Successfully joined **${roomName}**.`
-    })
+    }
   }
 }
 
