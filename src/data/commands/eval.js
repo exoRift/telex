@@ -39,7 +39,7 @@ const data = {
 
     return {
       embed: {
-        title: `Time taken: **${(stopTime - startTime) / 1000}** seconds`,
+        title: `Time taken: **${stopTime - startTime}** milliseconds`,
         color: result instanceof Error ? 16711680 : 65280,
         footer: {
           text: 'Type: ' + (result instanceof Array ? 'array' : result instanceof Error ? 'error' : typeof result)
