@@ -1,8 +1,8 @@
 const { abbreviate } = require('../utils.js')
 
-module.exports = (agent, guild, oldGuild) => {
+module.exports = function (guild, oldGuild) {
   if (guild.name !== oldGuild.name) {
-    agent._knex.update({
+    this._knex.update({
       table: 'guilds',
       where: {
         id: guild.id
