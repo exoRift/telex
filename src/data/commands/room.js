@@ -57,6 +57,7 @@ const data = {
             owner: msg.channel.guild.id
           }
         })
+        msg.channel.createMessage('Room created! By default, your password is `1234`.')
       }
     }
 
