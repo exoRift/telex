@@ -45,6 +45,47 @@ const statusEmojis = {
 }
 
 /**
+ * Compile Discord messages into content suitable for transmitting.
+ * @async
+ * @this    agent
+ * @param   {Eris.Message}    msg The message to compile.
+ * @returns {Promise<Object>}     An object containing the transmission data.
+ */
+async function compileMessage (msg) {
+  const guildData = await this._knex.get({
+    table: 'guilds',
+    columns: ['channel', 'room', 'abbreviation'],
+    where: {
+      id: msg.channel.guild.id
+    }
+  })
+
+  if (guildData && msg.channel.id === guildData.channel) {
+    return this._knex.get({
+      table: 'rooms',
+      columns: 'owner',
+      where: {
+        name: guildData.room
+      }
+    }).then(({ owner }) => {
+      const content = msg.author.id === owner ? '👑 ' : '' +
+      `*${guildData.abbreviation}* **${msg.author.username}#${msg.author.discriminator}**` +
+      `${msg.content ? ' ' + msg.content : ''}${msg.attachments.length ? msg.attachments.reduce((a, attachment) => a + attachment.url, '\n') : ''}`
+
+      if (content.length > 2000) {
+        throw msg.channel.createMessage({
+          embed: {
+            title: 'Message is too long to pass through.',
+            color: 16777010
+          }
+        })
+      } else return { room: guildData.room, msg: content, exclude: msg.channel.guild.id }
+    })
+  }
+  throw Error('No room.')
+}
+
+/**
  * Transmit a message across a room.
  * @this    agent
  * @param   {Object}                  data        The data for the transmission.
@@ -52,12 +93,15 @@ const statusEmojis = {
  * @prop    {Object}                  data.msg    The message to transmit.
  * @returns {Promise<Eris.Message[]>}             An array of all messages sent.
  */
-function transmit ({ room, msg }) {
+function transmit ({ room, msg, exclude }) {
   return this._knex.select({
     table: 'guilds',
     columns: 'channel',
     where: {
       room
+    },
+    whereNot: {
+      id: exclude
     }
   }).then((channels) => {
     if (channels.length) {
@@ -84,6 +128,7 @@ module.exports = {
   requireDirToArray,
   requireDirToObject,
   statusEmojis,
+  compileMessage,
   transmit,
   abbreviate
 }
