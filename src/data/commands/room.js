@@ -11,10 +11,12 @@ const {
 
 const { abbreviate } = require('../utils.js')
 
+const join = require('./join.js')
+
 const data = {
   name: 'room',
   desc: 'Open the room management panel',
-  action: async ({ client, msg, knex }) => {
+  action: async ({ agent, client, msg, knex }) => {
     let guildData = await knex.get({
       table: 'guilds',
       where: {
@@ -24,26 +26,38 @@ const data = {
 
     if (!guildData) {
       const room = `${msg.author.username}#${msg.author.discriminator}'s room`
-      guildData = {
-        id: msg.channel.guild.id,
-        channel: msg.channel.id,
-        room,
-        abbreviation: abbreviate(msg.channel.guild.name)
-      }
 
-      await knex.insert({
-        table: 'guilds',
-        data: guildData
-      })
-
-      await knex.insert({
+      const existing = await knex.get({
         table: 'rooms',
-        data: {
-          name: room,
-          pass: '1234',
-          owner: msg.channel.guild.id
+        columns: 'pass',
+        where: {
+          name: room
         }
       })
+
+      if (existing) await join.action({ agent, client, msg, args: [room, existing.pass], knex })
+      else {
+        guildData = {
+          id: msg.channel.guild.id,
+          channel: msg.channel.id,
+          room,
+          abbreviation: abbreviate(msg.channel.guild.name)
+        }
+
+        await knex.insert({
+          table: 'guilds',
+          data: guildData
+        })
+
+        await knex.insert({
+          table: 'rooms',
+          data: {
+            name: room,
+            pass: '1234',
+            owner: msg.channel.guild.id
+          }
+        })
+      }
     }
 
     const roomData = await knex.get({
