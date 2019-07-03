@@ -19,7 +19,7 @@ const data = {
   options: {
     args: [{ name: 'room', mand: true }, { name: 'password', mand: true }]
   },
-  action: async ({ agent, msg, args: [roomName, password], knex }) => {
+  action: async ({ agent, client, msg, args: [roomName, password], knex }) => {
     const guilds = await knex.select({
       table: 'guilds',
       columns: ['id', 'channel', 'room', 'adminrole']
@@ -93,7 +93,7 @@ const data = {
       table: 'guilds',
       data: {
         id: msg.channel.guild.id,
-        channel: msg.channel.id,
+        channel: !msg.channel.permissionsOf(client.user.id).has('sendMessages') ? msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type) : msg.channel.id,
         room: roomName,
         abbreviation: abbreviate(msg.channel.guild.name)
       }
