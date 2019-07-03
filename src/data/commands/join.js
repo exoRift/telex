@@ -13,7 +13,7 @@ const {
 
 const data = {
   name: 'join',
-  desc: 'Join a room.',
+  desc: 'Join a room',
   options: {
     args: [{ name: 'room', mand: true }, { name: 'password', mand: true }]
   },
@@ -108,9 +108,9 @@ const data = {
             room: roomName
           }
         })
-  
+
         agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guildsInRoom.length }) })
-  
+
         return `Successfully joined **${roomName}**.`
       })
     }
