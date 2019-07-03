@@ -2,6 +2,7 @@ const { Command } = require('cyclone-engine')
 
 const data = {
   name: 'list',
+  desc: 'List all the guilds in your room and their abbreviations',
   action: async ({ client, msg, knex }) => {
     const guilds = await knex.select({
       table: 'guilds',
