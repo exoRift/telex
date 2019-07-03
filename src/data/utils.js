@@ -60,11 +60,13 @@ function transmit ({ room, msg }) {
       room
     }
   }).then((channels) => {
-    const promises = []
+    if (channels.length) {
+      const promises = []
 
-    for (const channel of channels) promises.push(this._client.createMessage(channel.channel, msg))
+      for (const { channel } of channels) promises.push(this._client.createMessage(channel, msg))
 
-    return Promise.all(promises)
+      return Promise.all(promises)
+    }
   })
 }
 
