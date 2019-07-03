@@ -9,9 +9,7 @@ const {
   memberButtons
 } = require('../roomButtons')
 
-const {
-  abbreviate
-} = require('../utils.js')
+const { abbreviate } = require('../utils.js')
 
 const data = {
   name: 'room',

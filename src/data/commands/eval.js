@@ -1,10 +1,6 @@
-const {
-  Command
-} = require('cyclone-engine')
+const { Command } = require('cyclone-engine')
 
-const {
-  inspect
-} = require('util')
+const { inspect } = require('util')
 
 const {
   TOKEN,
@@ -19,7 +15,7 @@ const privates = [
 ]
 
 const symbolRegex = /(\.|\\|\?)/g
-const evalRegex = new RegExp(`(${privates.reduce((a, e) => `${a}${a ? '|' : ''}${e.replace(symbolRegex, (match, capture) => '\\' + capture)}`, '')})`, 'g')
+const evalRegex = new RegExp(`(${privates.reduce((a, p) => `${a}${a ? '|' : ''}${p.replace(symbolRegex, (match, capture) => '\\' + capture)}`, '')})`, 'g')
 
 const data = {
   name: 'eval',

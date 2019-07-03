@@ -4,9 +4,7 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
-const {
-  abbreviate
-} = require('../utils.js')
+const { abbreviate } = require('../utils.js')
 
 const {
   leave,

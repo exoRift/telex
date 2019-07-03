@@ -2,9 +2,7 @@ const pageRegex = /page (\d+?)/
 
 const { join } = require('path')
 
-const {
-  SUPPORT_SERVER
-} = process.env
+const { SUPPORT_SERVER } = process.env
 
 const {
   Command,

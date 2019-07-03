@@ -3,9 +3,7 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
-const {
-  leave
-} = require('../../alerts')
+const { leave } = require('../../alerts')
 
 const data = {
   name: 'Leave',
