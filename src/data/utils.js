@@ -74,7 +74,7 @@ function transmit ({ room, msg }) {
  * @returns {String}      The abbreviated result.
  */
 function abbreviate (name) {
-  return name.split(' ').reduce((a, e) => a + e[0], '')
+  return name.split(' ').reduce((a, w) => a + w[0], '')
 }
 
 module.exports = {

@@ -1,6 +1,4 @@
-const {
-  Command
-} = require('cyclone-engine')
+const { Command } = require('cyclone-engine')
 
 const {
   links,
@@ -12,7 +10,7 @@ const data = {
   desc: 'View all shard latencies',
   action: ({ client, msg }) => {
     const latencies = client.shards.map((s) => s.latency)
-    const latencyAverage = latencies.reduce((a, e) => a + e, 0) / latencies.length
+    const latencyAverage = latencies.reduce((a, l) => a + l, 0) / latencies.length
     const fields = client.shards.map((shard) => {
       return {
         name: `${!msg.channel.type && shard.id === msg.channel.guild.shard.id ? '*' : ''}Shard ${shard.id}`,

@@ -1,6 +1,4 @@
-const {
-  Await
-} = require('cyclone-engine')
+const { Await } = require('cyclone-engine')
 
 const data = {
   name: 'Password',

@@ -5,9 +5,7 @@ const {
 } = require('cyclone-engine')
 
 const {
-  links: {
-    inviteIcon
-  },
+  links: { inviteIcon },
   abbreviate
 } = require('../utils.js')
 
