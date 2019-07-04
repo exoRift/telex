@@ -17,7 +17,7 @@ const data = {
     channel.createMessage(`The current password to **${name}** is \`${pass}\`. Type a new password for your room (Cancels after 10 seconds):`)
 
     return {
-      content: `**${user.username}** has been DM'd details.`,
+      content: `**${user.username}** has been DM'd details to change the password.`,
       wait: new Await({
         options: {
           timeout: 10000,
