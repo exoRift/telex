@@ -3,26 +3,24 @@ GuildLink
 <html>
   <head>
     <style>
+      :root {
+        --bg-color: #dcdcdc; 
+        --button-color: white;
+        --inline-color: #fdfd81;
+        --accent-color: #606060;
+        --label-text-color: black;
+      }
       body{
-        background-color: #e0e0e0;
-      }
-      a {
-        color: #fff936;
-      }
-      p {
-        color: #000000
+        background-color: var(--bg-color);
       }
       .bot-description {
-        color: #606060;
-      }
-      #bot-stats {
-        color: #606060;
+        color: var(--accent-color);
       }
       #bot-details-page .bot-img {
         box-shadow: none !important;
       }
       #menu {
-        background-color: #606060;
+        background-color: var(--accent-color);
       }
       .container {
         border-top: 0px !important;
@@ -30,42 +28,42 @@ GuildLink
       }
       button {
         border-radius: 0px;
-        border-color: #ffff66 !important;
+        border-color: var(--inline-color) !important;
       }
       .btn {
-        color: #000000;
+        color: var(--label-text-color);
         font-size: 15px;
-        background: #ffffff;
+        background: var(--button-color);
         text-decoration: none;
         border-radius: 7px;
         border: 2px solid;
       }
       .btn:hover {
-        border-color: #ffffff;
+        border-color: var(--button-color);
         border: 2px solid;
-        color: #FFFF66;
+        color: var(--inline-color);
         font-size: 15px;
-        background: #000000;
+        background: var(--accent-color);
         padding: 5px 10px 5px 10px;
         text-decoration: none;
       }
       .botpagebutton {
         font-size: 16px !important;
         font-family: Arial;
-        color: #111111;
-        background: #ffffff;
+        color: var(--label-text-color);
+        background: var(--button-color);
         height: 25px;
         border-radius: 7px !important;
         text-decoration: none;
       }
       .botpagebutton:hover {
-        color: #111111;
-        background: #ffffff;
+        color: var(--label-text-color);
+        background: var(--button-color);
         text-decoration: none;
         transform:scale(1.035,1.035);
       }
       .botpagebutton:active {
-        transform:scale(0.98,0.98);
+        transform: scale(0.98,0.98);
       }
       @keyframes bounce {
         from {
@@ -84,52 +82,55 @@ GuildLink
         }
       }
       .bot-name {
-        color: #b90000 !important;
+        color: var(--inline-color) !important;
       }
       code {
         font-family: Arial;
-        color: #111111;
-        background: #ffffff80;
-        box-shadow: 2px 2px #b9000054;
+        color: var(--label-text-color);
+        background: var(--button-color);
+        box-shadow: 2px 2px var(--inline-color);
         border-radius: 2px 2px 2px 2px !important;
         text-decoration: none;
       }
       .atag::before {
-        background-color: #111111 !important;
+        background-color: var(--label-text-color) !important;
         top: 22px !important;
       }
       .atag {
-        background: #ffffff !important;
-        color: #000000 !important;
-        border-color: #111111;
+        background-color: var(--button-color) !important;
+        color: var(--label-text-color) !important;
+        border-color: var(--label-text-color);
         padding: 24px !important;
         line-height: 1px !important;
         border-radius: 4px 0px 0px 4px !important;
         margin-right: 20px !important;
       }
       .atag:hover {
-        transform:scale(1.035,1.035);
+        transform: scale(1.035,1.035);
         animation: pop 0.5s;
         animation-iteration-count: infinite;
       }
       .atag:active {
-        transform:scale(0.98,0.98);
+        transform: scale(0.98,0.98);
       }
       .atag::after {
         border-bottom: 24px solid transparent !important;
-        border-left: 16px solid #ffee00 !important;
+        border-left: 16px solid var(--inline-color) !important;
         border-top: 24px solid transparent !important;
         right: -16px !important;
         top: 0 !important;
       }
       #createdby {
-        color: #ffffff !important;
+        color: var(--label-text-color) !important;
       }
       .owners a {
-        color: #ffee00 !important;
+        color: var(--button-color) !important;
+      }
+      .owners a:hover {
+        color: var(--inline-color) !important;
       }
       #createdby b {
-        background: #1c1c1c;
+        background: var(--accent-color);
       }
       .blog_card {
         border-radius: 5px;
@@ -139,30 +140,26 @@ GuildLink
         content: none !important;
         background-color: transparent;
       }
-      .owners a:hover {
-        color: #ffffff !important;
-      }
       .longdescription .content {
         box-shadow: 3px 3px 10px 2px tansparent !important;
         text-align: center;
         padding: 0px !important;
-        background: #a0a0a0; /* For browsers that do not support gradients */
-        background: linear-gradient(to right, #808080 , #a0a0a0, #acacac, #acacac, #a0a0a0, #808080); /* Standard syntax (must be last) */
+        color: var(--label-text-color);
+        background: var(--accent-color); /* For browsers that do not support gradients */
+        background: linear-gradient(to right, #80808048 , #80808080, #808080b2, #808080b2, #80808080, #80808048); /* Standard syntax (must be last) */
       }
       #bot-details-page #bot-stats p {
         font: 400 20px "Karla", sans-serif;
         line-height: 1.4;
-        color: #000000;
+        color: var(--label-text-color);
       }
     </style>
   </head>
   <body>
-    <a>
-      WARNING: Bot is in an early state. This doesn't mean unstable; it just means you might run into bugs so PLEASE report them.
-      <br>
-      <br>Once you have joined a room, just simply type in the assigned channel to transmit your message!
-      <br>
-      <br>{DATA_HERE}
-    </a>
+    WARNING: Bot is in an early state. This doesn't mean unstable; it just means you might run into bugs so PLEASE report them.
+    <br>
+    <br>Once you have joined a room, just simply type in the assigned channel to transmit your message!
+    <br>
+    <br>{DATA_HERE}
   </body>
 </html>
