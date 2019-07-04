@@ -68,7 +68,7 @@ async function compileMessage (msg) {
         name: guildData.room
       }
     }).then(({ owner }) => {
-      const content = msg.channel.guild.id === owner ? '👑 ' : '' +
+      const content = (msg.channel.guild.id === owner ? '👑 ' : '') +
       `*${guildData.abbreviation}* **${msg.author.username}#${msg.author.discriminator}**` +
       `${msg.content ? ' ' + msg.content : ''}${msg.attachments.length ? msg.attachments.reduce((a, attachment) => a + attachment.url, '\n') : ''}`
 

@@ -60,7 +60,7 @@ const data = {
           })
           msg.channel.createMessage('Room created! By default, your password is `1234`.')
         }
-      }
+      } else return
     }
 
     const roomData = await knex.get({
