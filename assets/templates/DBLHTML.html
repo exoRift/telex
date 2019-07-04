@@ -7,6 +7,7 @@ GuildLink
         --bg-color: #dcdcdc; 
         --button-color: white;
         --inline-color: #fdfd81;
+        --outline-color: #e08181;
         --accent-color: #606060;
         --label-text-color: black;
       }
@@ -82,13 +83,13 @@ GuildLink
         }
       }
       .bot-name {
-        color: var(--inline-color) !important;
+        color: var(--outline-color) !important;
       }
       code {
         font-family: Arial;
         color: var(--label-text-color);
         background: var(--button-color);
-        box-shadow: 2px 2px var(--inline-color);
+        box-shadow: 2px 2px var(--outline-color);
         border-radius: 2px 2px 2px 2px !important;
         text-decoration: none;
       }
@@ -146,7 +147,7 @@ GuildLink
         padding: 0px !important;
         color: var(--label-text-color);
         background: var(--accent-color); /* For browsers that do not support gradients */
-        background: linear-gradient(to right, #80808048 , #80808080, #808080b2, #808080b2, #80808080, #80808048); /* Standard syntax (must be last) */
+        background: linear-gradient(to right, #80808013 , #8080803b, #80808069, #80808069, #8080803b, #80808013); /* Standard syntax (must be last) */
       }
       #bot-details-page #bot-stats p {
         font: 400 20px "Karla", sans-serif;
