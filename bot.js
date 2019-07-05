@@ -64,8 +64,10 @@ agent.connect().then(() => {
       for (const guildData of guilds) {
         const guild = agent._client.guilds.get(guildData.id)
 
-        if (!guild) onGuildDelete.call(agent, guildData)
-        else onChannelUnavailable.call(agent, guild)
+        if (!guild) {
+          guildData.name = 'deleted-guild'
+          onGuildDelete.call(agent, guildData)
+        } else onChannelUnavailable.call(agent, guild)
       }
     })
   }, 5000)
