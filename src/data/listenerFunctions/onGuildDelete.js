@@ -11,6 +11,7 @@ module.exports = async function (guild) {
       id: guild.id
     }
   })
+
   if (data) {
     const { owner } = await this._knex.get({
       table: 'rooms',
