@@ -56,15 +56,17 @@ agent._client.on('channelUpdate', (channel) => onChannelUnavailable.call(agent, 
 agent._client.on('channelDelete', (channel) => onChannelUnavailable.call(agent, channel.guild))
 
 agent.connect().then(() => {
-  agent._knex.select({
-    table: 'guilds',
-    columns: ['id', 'channel']
-  }).then((guilds) => {
-    for (const guildData of guilds) {
-      const guild = agent._client.guilds.get(guildData.id)
+  setTimeout(() => {
+    agent._knex.select({
+      table: 'guilds',
+      columns: ['id', 'channel']
+    }).then((guilds) => {
+      for (const guildData of guilds) {
+        const guild = agent._client.guilds.get(guildData.id)
 
-      if (!guild) onGuildDelete.call(agent, guild)
-      else onChannelUnavailable.call(agent, guild)
-    }
-  })
+        if (!guild) onGuildDelete.call(agent, guildData)
+        else onChannelUnavailable.call(agent, guild)
+      }
+    })
+  }, 5000)
 })
