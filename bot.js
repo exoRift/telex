@@ -60,29 +60,11 @@ agent.connect().then(() => {
     table: 'guilds',
     columns: ['id', 'channel']
   }).then((guilds) => {
-    const deletedGuilds = guilds.reduce((a, g) => {
-      const guild = agent._client.guilds.get(g.id)
-      if (!guild) a.push(g.id)
-      else if (!guild.channels.get(g.channel) || !guild.channels.get(g.channel).permissionsOf(agent._client.user.id).has('sendMessages')) {
-        agent._knex.update({
-          table: 'guilds',
-          where: {
-            id: g.id,
-            data: {
-              channel: g.channels.find((c) => c.permissionsOf(agent._client.user.id).has('sendMessages') && !c.type).id
-            }
-          }
-        })
-      }
+    for (const guildData of guilds) {
+      const guild = agent._client.guilds.get(guildData.id)
 
-      return a
-    }, [])
-
-    if (deletedGuilds) {
-      agent._knex.delete({
-        table: 'guilds',
-        where: (builder) => builder.whereIn('id', deletedGuilds)
-      })
+      if (!guild) onGuildDelete.call(agent, guild)
+      else onChannelUnavailable.call(agent, guild)
     }
   })
 })
