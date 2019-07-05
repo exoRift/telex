@@ -97,17 +97,19 @@ const data = {
           }
         })
       },
-      reactInterface: new ReactInterface({
-        buttons: buttons.map((b) => new ReactCommand(b)),
-        options: {
-          restricted: true,
-          designatedUsers: guildData.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-            if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
-            return accum
-          }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID,
-          removeReaction: true
-        }
-      })
+      options: {
+        reactInterface: new ReactInterface({
+          buttons: buttons.map((b) => new ReactCommand(b)),
+          options: {
+            restricted: true,
+            designatedUsers: guildData.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
+              if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
+              return accum
+            }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID,
+            removeReaction: true
+          }
+        })
+      }
     }
   }
 }

@@ -38,17 +38,19 @@ const data = {
 
       return {
         content: `Are you sure you want to leave **${room}**?`,
-        reactInterface: new ReactInterface({
-          buttons,
-          options: {
-            deleteAfterUse: true,
-            restricted: true,
-            designatedUsers: adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-              if (roles.find((r) => r === adminrole)) accum.push(id)
-              return accum
-            }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
-          }
-        })
+        options: {
+          reactInterface: new ReactInterface({
+            buttons,
+            options: {
+              deleteAfterUse: true,
+              restricted: true,
+              designatedUsers: adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
+                if (roles.find((r) => r === adminrole)) accum.push(id)
+                return accum
+              }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
+            }
+          })
+        }
       }
     })
   }

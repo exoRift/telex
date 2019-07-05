@@ -18,26 +18,28 @@ const data = {
 
     return {
       content: `**${user.username}** has been DM'd details to change the password.`,
-      wait: new Await({
-        options: {
-          timeout: 10000,
-          channel: channel.id,
-          args: [{ name: 'pass', mand: true }]
-        },
-        action: ({ args: [pass] }) => {
-          if (pass.includes(' ')) return '`Password cannot contain spaces.`'
+      options: {
+        wait: new Await({
+          options: {
+            timeout: 10000,
+            channel: channel.id,
+            args: [{ name: 'pass', mand: true }]
+          },
+          action: ({ args: [pass] }) => {
+            if (pass.includes(' ')) return '`Password cannot contain spaces.`'
 
-          return knex.update({
-            table: 'rooms',
-            where: {
-              name
-            },
-            data: {
-              pass
-            }
-          }).then(() => 'Successfully changed password.')
-        }
-      })
+            return knex.update({
+              table: 'rooms',
+              where: {
+                name
+              },
+              data: {
+                pass
+              }
+            }).then(() => 'Successfully changed password.')
+          }
+        })
+      }
     }
   }
 }

@@ -73,17 +73,19 @@ const data = {
 
       return {
         content: `You are already in the room **${guild.room}**. Would you like to switch?`,
-        reactInterface: new ReactInterface({
-          buttons,
-          options: {
-            deleteAfterUse: true,
-            restricted: true,
-            designatedUsers: guild.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-              if (roles.find((r) => r === guild.adminrole)) accum.push(id)
-              return accum
-            }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
-          }
-        })
+        options: {
+          reactInterface: new ReactInterface({
+            buttons,
+            options: {
+              deleteAfterUse: true,
+              restricted: true,
+              designatedUsers: guild.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
+                if (roles.find((r) => r === guild.adminrole)) accum.push(id)
+                return accum
+              }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
+            }
+          })
+        }
       }
     }
 
