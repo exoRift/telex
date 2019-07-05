@@ -75,15 +75,17 @@ const data = {
 
     return {
       embed: helpMenu,
-      wait,
-      reactInterface: new ReactInterface({
-        buttons,
-        options: {
-          restricted: true,
-          designatedUsers: msg.author.id,
-          removeReaction: true
-        }
-      })
+      options: {
+        wait,
+        reactInterface: new ReactInterface({
+          buttons,
+          options: {
+            restricted: true,
+            designatedUsers: msg.author.id,
+            removeReaction: true
+          }
+        })
+      }
     }
   }
 }

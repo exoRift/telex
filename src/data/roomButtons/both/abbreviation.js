@@ -7,24 +7,27 @@ const data = {
   action: () => {
     return {
       content: 'Type your new abbreviation for transmitted messages (Cancels after 10 seconds):',
-      wait: new Await({
-        options: {
-          timeout: 10000,
-          args: [{ name: 'abbreviation', mand: true }]
-        },
-        action: ({ msg, args: [abbreviation], knex }) => {
-          if (abbreviation.length > 5) return '`Abbreviation too long.`'
-          return knex.update({
-            table: 'guilds',
-            where: {
-              id: msg.channel.guild.id
-            },
-            data: {
-              abbreviation
-            }
-          }).then(() => `Abbreviation changed to \`${abbreviation}\``)
-        }
-      })
+      options: {
+        wait: new Await({
+          options: {
+            timeout: 10000,
+            args: [{ name: 'abbreviation', mand: true }]
+          },
+          action: ({ msg, args: [abbreviation], knex }) => {
+            if (abbreviation.length > 5) return '`Abbreviation too long.`'
+
+            return knex.update({
+              table: 'guilds',
+              where: {
+                id: msg.channel.guild.id
+              },
+              data: {
+                abbreviation
+              }
+            }).then(() => `Abbreviation changed to \`${abbreviation}\``)
+          }
+        })
+      }
     }
   }
 }
