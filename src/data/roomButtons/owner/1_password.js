@@ -14,33 +14,35 @@ const data = {
       }
     })
 
-    channel.createMessage(`The current password to **${name}** is \`${pass}\`. Type a new password for your room (Cancels after 10 seconds):`)
-
-    return {
-      content: `**${user.username}** has been DM'd details to change the password.`,
-      options: {
-        wait: new Await({
+    return channel.createMessage(`The current password to **${name}** is \`${pass}\`. Type a new password for your room (Cancels after 10 seconds):`)
+      .then(() => {
+        return {
+          content: `**${user.username}** has been DM'd details to change the password.`,
           options: {
-            timeout: 10000,
-            channel: channel.id,
-            args: [{ name: 'pass', mand: true }]
-          },
-          action: ({ args: [pass] }) => {
-            if (pass.includes(' ')) return '`Password cannot contain spaces.`'
-
-            return knex.update({
-              table: 'rooms',
-              where: {
-                name
+            wait: new Await({
+              options: {
+                timeout: 10000,
+                channel: channel.id,
+                args: [{ name: 'pass', mand: true }]
               },
-              data: {
-                pass
+              action: ({ args: [pass] }) => {
+                if (pass.includes(' ')) return '`Password cannot contain spaces.`'
+
+                return knex.update({
+                  table: 'rooms',
+                  where: {
+                    name
+                  },
+                  data: {
+                    pass
+                  }
+                }).then(() => 'Successfully changed password.')
               }
-            }).then(() => 'Successfully changed password.')
+            })
           }
-        })
-      }
-    }
+        }
+      })
+      .catch(() => `\`${user.username} has DMs turned off and cannot be messaged password details.\``)
   }
 }
 
