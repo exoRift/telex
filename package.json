@@ -1,7 +1,7 @@
 {
   "name": "guildlink",
   "version": "0.0.5",
-  "description": "A bot that can allow you to set up rooms that guilds can connect to and chat across all connected guilds.",
+  "description": "A bot that allows you to set up inter-guild rooms that guilds can connect to and chat across.",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",

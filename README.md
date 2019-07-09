@@ -1,5 +1,5 @@
 # GuildLink
-A bot that can allow you to set up rooms that guilds can connect to and chat across all connected guilds
+A bot that allows you to set up inter-guild rooms that guilds can connect to and chat across.
 -
 [![Discord Server](https://img.shields.io/badge/-Support%20Server-b.svg?colorA=697ec4&colorB=7289da&logo=discord)](https://discord.gg/Rqd8SJ9)
 ![Version](https://img.shields.io/github/package-json/v/mets11rap/guildlink.svg?label=Version)
