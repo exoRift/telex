@@ -92,10 +92,12 @@ const data = {
                         room: roomData.name,
                         abbreviation: abbreviate(target.name)
                       }
-                    }).then(() =>
-                      agent.transmit({ room: roomData.name, msg: join({ guildName: target.name, guildsInRoom: guilds.filter((g) => g.room === roomData.name).length }) })
-                        .then(() => `Successfully joined **${roomData.name}**.`)
-                    )
+                    })
+                      .then(() =>
+                        agent.transmit({ room: roomData.name, msg: join({ guildName: target.name, guildsInRoom: guilds.filter((g) => g.room === roomData.name).length }) })
+                          .then(() => `Successfully joined **${roomData.name}**.`)
+                      )
+                      .catch(() => '`An error occurred. You might already be in a room.`')
                   }
                 })
               ]
