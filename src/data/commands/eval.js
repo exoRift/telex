@@ -39,15 +39,12 @@ const data = {
 
     return {
       embed: {
-        title: `Time taken: **${stopTime - startTime}** milliseconds`,
-        color: result instanceof Error ? 16711680 : 65280,
-        footer: {
-          text: 'Type: ' + (result instanceof Array ? 'array' : result instanceof Error ? 'error' : typeof result)
-        },
         author: {
           name: 'JS Evaluation',
           icon_url: msg.author.avatarURL
         },
+        title: `Time taken: **${stopTime - startTime}** milliseconds`,
+        color: result instanceof Error ? 16711680 : 65280,
         fields: [
           {
             name: 'Input',
@@ -57,7 +54,10 @@ const data = {
             name: result instanceof Error ? 'Error' : 'Output',
             value: `\`\`\`js\n${output.replace(evalRegex, 'REDACTED')}\`\`\``
           }
-        ]
+        ],
+        footer: {
+          text: 'Type: ' + (result instanceof Array ? 'array' : result instanceof Error ? 'error' : typeof result)
+        }
       }
     }
   }

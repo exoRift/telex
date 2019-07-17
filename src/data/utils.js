@@ -88,10 +88,10 @@ async function compileMessage (msg) {
 /**
  * Transmit a message across a room.
  * @this    agent
- * @param   {Object}                  data        The data for the transmission.
- * @prop    {String}                  data.room   The room to transmit the message to.
- * @prop    {Object}                  data.msg    The message to transmit.
- * @returns {Promise<Eris.Message[]>}             An array of all messages sent.
+ * @param   {Object}                  data      The data for the transmission.
+ * @prop    {String}                  data.room The room to transmit the message to.
+ * @prop    {Object}                  data.msg  The message to transmit.
+ * @returns {Promise<Eris.Message[]>}           An array of all messages sent.
  */
 function transmit ({ room, msg, exclude = '' }) {
   return this._knex.select({

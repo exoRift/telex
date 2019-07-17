@@ -77,25 +77,25 @@ const data = {
 
     return {
       embed: {
-        title: `**${roomData.name}**`,
-        color: isOwner ? 4980889 : undefined,
         author: {
           name: 'Room Control Panel',
           icon_url: msg.channel.guild.iconURL
         },
-        footer: {
-          text: `${isOwner ? '👑 ' : ''}You are ${isOwner ? 'the owner' : 'a member'} of the room`
-        },
+        title: `**${roomData.name}**`,
         thumbnail: {
           url: client.guilds.find((g) => g.id === roomData.owner).iconURL
         },
+        color: isOwner ? 4980889 : undefined,
         fields: buttons.map((b) => {
           return {
             name: `${b.emoji} **${b.name}**`,
             value: b.value ? b.value({ client, msg, guildData, roomData }) : '​',
             inline: true
           }
-        })
+        }),
+        footer: {
+          text: `${isOwner ? '👑 ' : ''}You are ${isOwner ? 'the owner' : 'a member'} of the room`
+        }
       },
       options: {
         reactInterface: new ReactInterface({

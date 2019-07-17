@@ -21,15 +21,15 @@ const data = {
 
     return {
       embed: {
-        color: latencyAverage > 200 && latencyAverage < 300 ? 16776960 : latencyAverage > 300 ? 15933733 : 111111,
         author: {
           name: 'Latencies',
           icon_url: links.pingIcon
         },
+        color: latencyAverage > 200 && latencyAverage < 300 ? 16776960 : latencyAverage > 300 ? 15933733 : 111111,
+        fields,
         footer: {
           text: `Average ping is ${latencyAverage}ms`
-        },
-        fields
+        }
       }
     }
   }
