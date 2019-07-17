@@ -58,18 +58,18 @@ const data = {
           if (channel) {
             return channel.createMessage({
               embed: {
-                title: `\`Invited by\` __${msg.channel.guild.name}__`,
-                description: `Room name: **${roomData.name}**\nNumber of guilds in room: **${guilds.filter((g) => g.room === roomData.name).length}**`,
-                color: 2600252,
-                footer: {
-                  text: 'To redirect invite recieving, remove the ability for the bot to talk in this channel.'
-                },
-                thumbnail: {
-                  url: inviteIcon
-                },
                 author: {
                   name: 'Invite',
                   icon_url: msg.channel.guild.iconURL
+                },
+                title: `Invited by: __${msg.channel.guild.name}__`,
+                description: `Room name: **${roomData.name}**\nNumber of guilds in room: **${guilds.filter((g) => g.room === roomData.name).length}**`,
+                thumbnail: {
+                  url: inviteIcon
+                },
+                color: 2600252,
+                footer: {
+                  text: 'To redirect invite recieving, remove the ability for the bot to talk in this channel.'
                 }
               }
             }).then((rsp) => {
