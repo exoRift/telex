@@ -14,7 +14,9 @@ const data = {
             args: [{ name: 'channel', mand: true }]
           },
           action: ({ client, msg, args: [channelName], knex }) => {
-            const channel = msg.channel.guild.channels.find((c) => c.name.toLowerCase() === channelName.toLowerCase())
+            const channel = msg.channel.guild.channels.find(msg.channelMentions.length
+              ? (c) => c.id === msg.channelMentions[0]
+              : (c) => c.name.toLowerCase() === channelName.toLowerCase())
 
             if (channel) {
               if (channel.permissionsOf(client.user.id).has('sendMessages')) {
