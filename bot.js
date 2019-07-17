@@ -46,6 +46,7 @@ const agent = new Agent({
   }
 })
 agent.transmit = transmit.bind(agent)
+agent.polls = {}
 
 agent._client.on('guildUpdate', onGuildUpdate.bind(agent))
 agent._client.on('guildDelete', onGuildDelete.bind(agent))
