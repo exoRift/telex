@@ -103,6 +103,10 @@ const data = {
               room: guildData.room,
               msg: {
                 embed: {
+                  author: {
+                    name: 'Poll',
+                    icon_url: msg.channel.guild.iconURL
+                  },
                   title: '**The results are in!**',
                   description: `**${name}**`,
                   color: 65535,
