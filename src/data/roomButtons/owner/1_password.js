@@ -1,4 +1,6 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
 const data = {
   name: 'Password',
@@ -6,7 +8,9 @@ const data = {
   emoji: '🔐',
   action: async ({ msg, user, knex }) => {
     const channel = await user.getDMChannel()
-    const { name, pass } = await knex.get({
+    const {
+      name, pass
+    } = await knex.get({
       table: 'rooms',
       columns: ['name', 'pass'],
       where: {
@@ -26,8 +30,6 @@ const data = {
                 args: [{ name: 'pass', mand: true }]
               },
               action: ({ args: [pass] }) => {
-                if (pass.includes(' ')) return '`Password cannot contain spaces.`'
-
                 return knex.update({
                   table: 'rooms',
                   where: {

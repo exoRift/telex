@@ -1,10 +1,12 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
 const data = {
   name: 'Guild Abbreviation',
   value: ({ guildData }) => guildData.abbreviation || 'None',
   emoji: '🔰',
-  action: () => {
+  action: ({ msg }) => {
     return {
       content: 'Type your new abbreviation for transmitted messages (Cancels after 10 seconds):',
       options: {
@@ -13,10 +15,11 @@ const data = {
             timeout: 10000,
             args: [{ name: 'abbreviation', mand: true }]
           },
-          action: ({ msg, args: [abbreviation], knex }) => {
+          action: ({ agent, msg: response, args: [abbreviation], knex, triggerResponse }) => {
+            triggerResponse.delete().catch((ignore) => ignore)
             if (abbreviation.length > 5) return '`Abbreviation too long.`'
 
-            return knex.update({
+            knex.update({
               table: 'guilds',
               where: {
                 id: msg.channel.guild.id
@@ -24,7 +27,20 @@ const data = {
               data: {
                 abbreviation
               }
-            }).then(() => `Abbreviation changed to \`${abbreviation}\``)
+            }).then(async () => {
+              const {
+                room
+              } = await knex.get({
+                table: 'guilds',
+                columns: 'room',
+                where: {
+                  id: msg.channel.guild.id
+                }
+              })
+
+              msg.edit(await agent.buildPanel(room, msg.channel.guild.id)).catch((ignore) => ignore)
+              response.delete().catch((ignore) => ignore)
+            })
           }
         })
       }

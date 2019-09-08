@@ -1,6 +1,10 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
-const { kick } = require('../../alerts')
+const {
+  kick
+} = require('../../alerts/')
 
 const data = {
   name: 'Kick',

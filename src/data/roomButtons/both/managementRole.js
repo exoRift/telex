@@ -1,8 +1,10 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
 const data = {
   name: 'Management Role',
-  value: ({ msg, guildData }) => msg.channel.guild.roles.get(guildData.adminrole) ? `<@&${guildData.adminrole}>` : 'None',
+  value: ({ guild, guildData }) => guild.roles.get(guildData.adminrole) ? `<@&${guildData.adminrole}>` : 'None',
   emoji: '🎩',
   action: () => {
     return {

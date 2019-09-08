@@ -1,4 +1,6 @@
-const { Command } = require('cyclone-engine')
+const {
+  Command
+} = require('cyclone-engine')
 
 const data = {
   name: 'list',

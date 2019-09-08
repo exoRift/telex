@@ -1,6 +1,10 @@
-const { Command } = require('cyclone-engine')
+const {
+  Command
+} = require('cyclone-engine')
 
-const { DBL_WIDGET } = process.env
+const {
+  DBL_WIDGET
+} = process.env
 
 const data = {
   name: 'dblwidget',

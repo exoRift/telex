@@ -1,7 +1,16 @@
-const { readdirSync } = require('fs')
-const { join } = require('path')
+const {
+  readdirSync
+} = require('fs')
+const {
+  join
+} = require('path')
 
 const filenameRegex = /(.+?)\.js$/
+
+const {
+  ReactCommand,
+  ReactInterface
+} = require('cyclone-engine')
 
 const links = {
   pingIcon: 'https://i.imgur.com/SCCJ8qs.gif',
@@ -115,6 +124,76 @@ function transmit ({ room, msg, exclude = '' }) {
 }
 
 /**
+ * Build a room management panel.
+ * @async
+ * @this                      agent
+ * @param   {String}          room  The name of the room.
+ * @param   {String}          guild The ID of the guild.
+ * @returns {Promise<Object>}       The message data containing the panel.
+ */
+async function buildPanel (room, guild) {
+  const {
+    ownerButtons,
+    memberButtons
+  } = require('./roomButtons/')
+
+  const roomData = await this._knex.get({
+    table: 'rooms',
+    where: {
+      name: room
+    }
+  })
+  const guildData = await this._knex.get({
+    table: 'guilds',
+    where: {
+      id: guild
+    }
+  })
+
+  const guildObject = this._client.guilds.get(guild)
+
+  const isOwner = guild === roomData.owner
+  const buttons = isOwner ? ownerButtons : memberButtons
+
+  return {
+    embed: {
+      author: {
+        name: 'Room Control Panel',
+        icon_url: guildObject.iconURL
+      },
+      title: `**${roomData.name}**`,
+      thumbnail: {
+        url: this._client.guilds.get(roomData.owner).iconURL
+      },
+      color: isOwner ? 4980889 : undefined,
+      fields: buttons.map((b) => {
+        return {
+          name: `${b.emoji} **${b.name}**`,
+          value: b.value ? b.value({ client: this._client, guild: guildObject, guildData, roomData }) : '​',
+          inline: true
+        }
+      }),
+      footer: {
+        text: `${isOwner ? '👑 ' : ''}You are ${isOwner ? 'the owner' : 'a member'} of the room`
+      }
+    },
+    options: {
+      reactInterface: new ReactInterface({
+        buttons: buttons.map((b) => new ReactCommand(b)),
+        options: {
+          restricted: true,
+          designatedUsers: guildData.adminrole ? guildObject.members.reduce((accum, { id, roles }) => {
+            if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
+            return accum
+          }, []).concat([guildObject.ownerID]) : guildObject.ownerID,
+          removeReaction: true
+        }
+      })
+    }
+  }
+}
+
+/**
  * Abbreviate a name.
  * @param   {String} name The name to abbreviate.
  * @returns {String}      The abbreviated result.
@@ -130,5 +209,6 @@ module.exports = {
   statusEmojis,
   compileMessage,
   transmit,
+  buildPanel,
   abbreviate
 }

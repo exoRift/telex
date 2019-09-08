@@ -1,4 +1,4 @@
 module.exports = {
-  ownerButtons: require('./owner'),
-  memberButtons: require('./member')
+  ownerButtons: require('./owner/'),
+  memberButtons: require('./member/')
 }

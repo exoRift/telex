@@ -1,15 +1,10 @@
 const {
-  Command,
-  ReactCommand,
-  ReactInterface
+  Command
 } = require('cyclone-engine')
 
 const {
-  ownerButtons,
-  memberButtons
-} = require('../roomButtons')
-
-const { abbreviate } = require('../utils.js')
+  abbreviate
+} = require('../utils.js')
 
 const join = require('./join.js')
 
@@ -60,57 +55,12 @@ const data = {
           })
           msg.channel.createMessage('Room created! By default, your password is `1234`.')
         }
-      } else return
+      } else return '`You are unauthorized to do that`'
     }
-
-    const roomData = await knex.get({
-      table: 'rooms',
-      where: {
-        name: guildData.room
-      }
-    })
 
     if (!msg.member.roles.includes(guildData.adminrole) && msg.author.id !== msg.channel.guild.ownerID) return '`You are unauthorized to do that`'
 
-    const isOwner = msg.channel.guild.id === roomData.owner
-    const buttons = isOwner ? ownerButtons : memberButtons
-
-    return {
-      embed: {
-        author: {
-          name: 'Room Control Panel',
-          icon_url: msg.channel.guild.iconURL
-        },
-        title: `**${roomData.name}**`,
-        thumbnail: {
-          url: client.guilds.find((g) => g.id === roomData.owner).iconURL
-        },
-        color: isOwner ? 4980889 : undefined,
-        fields: buttons.map((b) => {
-          return {
-            name: `${b.emoji} **${b.name}**`,
-            value: b.value ? b.value({ client, msg, guildData, roomData }) : '​',
-            inline: true
-          }
-        }),
-        footer: {
-          text: `${isOwner ? '👑 ' : ''}You are ${isOwner ? 'the owner' : 'a member'} of the room`
-        }
-      },
-      options: {
-        reactInterface: new ReactInterface({
-          buttons: buttons.map((b) => new ReactCommand(b)),
-          options: {
-            restricted: true,
-            designatedUsers: guildData.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-              if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
-              return accum
-            }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID,
-            removeReaction: true
-          }
-        })
-      }
-    }
+    return agent.buildPanel(guildData.room, msg.channel.guild.id)
   }
 }
 

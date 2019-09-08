@@ -1,12 +1,19 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
-const { deleteRoom } = require('../../alerts')
+const {
+  deleteRoom
+} = require('../../alerts/')
 
 const data = {
   name: 'Delete',
   emoji: '❌',
   action: async ({ msg, knex }) => {
-    const { name, pass } = await knex.get({
+    const {
+      name,
+      pass
+    } = await knex.get({
       table: 'rooms',
       columns: ['name', 'pass'],
       where: {

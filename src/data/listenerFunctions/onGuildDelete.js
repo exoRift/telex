@@ -1,7 +1,7 @@
 const {
   deleteRoom,
   leave
-} = require('../alerts')
+} = require('../alerts/')
 
 module.exports = async function (guild) {
   const data = await this._knex.get({
@@ -13,7 +13,9 @@ module.exports = async function (guild) {
   })
 
   if (data) {
-    const { owner } = await this._knex.get({
+    const {
+      owner
+    } = await this._knex.get({
       table: 'rooms',
       columns: 'owner',
       where: {

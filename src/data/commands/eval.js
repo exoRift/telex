@@ -1,6 +1,10 @@
-const { Command } = require('cyclone-engine')
+const {
+  Command
+} = require('cyclone-engine')
 
-const { inspect } = require('util')
+const {
+  inspect
+} = require('util')
 
 const {
   TOKEN,

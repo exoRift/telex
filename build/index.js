@@ -1,3 +1,5 @@
-const { requireDirToArray } = require('../src/data/utils.js')
+const {
+  requireDirToArray
+} = require('../src/data/utils.js')
 
 requireDirToArray(__dirname)

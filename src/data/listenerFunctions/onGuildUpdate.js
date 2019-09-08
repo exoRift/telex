@@ -1,4 +1,6 @@
-const { abbreviate } = require('../utils.js')
+const {
+  abbreviate
+} = require('../utils.js')
 
 module.exports = function (guild, oldGuild) {
   if (guild.name !== oldGuild.name) {

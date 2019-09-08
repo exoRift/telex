@@ -1,5 +1,9 @@
-const { Command } = require('cyclone-engine')
-const { pingIcon } = require('../utils.js').links
+const {
+  Command
+} = require('cyclone-engine')
+const {
+  pingIcon
+} = require('../utils.js').links
 
 const data = {
   name: 'ping',

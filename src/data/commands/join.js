@@ -4,18 +4,20 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
-const { abbreviate } = require('../utils.js')
+const {
+  abbreviate
+} = require('../utils.js')
 
 const {
   leave,
   join
-} = require('../alerts')
+} = require('../alerts/')
 
 const data = {
   name: 'join',
   desc: 'Join a room',
   options: {
-    args: [{ name: 'room', mand: true }, { name: 'password', mand: true }]
+    args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }]
   },
   action: async ({ agent, client, msg, args: [roomName, password], knex }) => {
     const guilds = await knex.select({
@@ -35,7 +37,9 @@ const data = {
     if (password !== room.pass) return '`Password incorrect.`'
 
     if (guild) {
-      const { owner } = await knex.get({
+      const {
+        owner
+      } = await knex.get({
         table: 'rooms',
         columns: 'owner',
         where: {
@@ -78,11 +82,14 @@ const data = {
             buttons,
             options: {
               deleteAfterUse: true,
+              removeReactions: true,
               restricted: true,
-              designatedUsers: guild.adminrole ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-                if (roles.find((r) => r === guild.adminrole)) accum.push(id)
-                return accum
-              }, []).concat([msg.channel.guild.ownerID]) : msg.channel.guild.ownerID
+              designatedUsers: guild.adminrole
+                ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
+                  if (roles.find((r) => r === guild.adminrole)) accum.push(id)
+                  return accum
+                }, []).concat([msg.channel.guild.ownerID])
+                : msg.channel.guild.ownerID
             }
           })
         }
@@ -91,7 +98,7 @@ const data = {
 
     const channel = msg.channel.permissionsOf(client.user.id).has('sendMessages')
       ? msg.channel.id
-      : msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type)
+      : msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type).id
 
     if (channel) {
       return knex.insert({

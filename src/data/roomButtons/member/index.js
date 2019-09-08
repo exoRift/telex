@@ -1,3 +1,5 @@
-const { requireDirToArray } = require('../../utils')
+const {
+  requireDirToArray
+} = require('../../utils.js')
 
 module.exports = requireDirToArray(__dirname)

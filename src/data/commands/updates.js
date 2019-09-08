@@ -1,6 +1,10 @@
-const { join } = require('path')
+const {
+  join
+} = require('path')
 
-const { Command } = require('cyclone-engine')
+const {
+  Command
+} = require('cyclone-engine')
 
 const data = {
   name: 'updates',

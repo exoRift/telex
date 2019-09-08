@@ -7,7 +7,7 @@ const {
   writeFile
 } = require('fs').promises
 
-const commands = require('../src/data/commands')
+const commands = require('../src/data/commands/')
 
 readdir('assets/templates').then((templates) => {
   for (const template of templates) {

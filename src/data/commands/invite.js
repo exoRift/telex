@@ -5,7 +5,9 @@ const {
 } = require('cyclone-engine')
 
 const {
-  links: { inviteIcon },
+  links: {
+    inviteIcon
+  },
   abbreviate
 } = require('../utils.js')
 
@@ -13,7 +15,7 @@ const {
   invite,
   inviteDecline,
   join
-} = require('../alerts')
+} = require('../alerts/')
 
 const data = {
   name: 'invite',
@@ -52,9 +54,10 @@ const data = {
             }
           })
 
-          if (targetData) return `\`${target.name} is already in the room ${targetData.room}.\``
+          if (targetData) return `\`${target.name} is already in the room: ${targetData.room}.\``
 
           const channel = target.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type)
+
           if (channel) {
             return channel.createMessage({
               embed: {
@@ -106,6 +109,7 @@ const data = {
                 buttons,
                 options: {
                   deleteAfterUse: true,
+                  removeReaction: true,
                   restricted: true,
                   designatedUsers: target.ownerID
                 }

@@ -3,7 +3,9 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
-const { leave } = require('../../alerts')
+const {
+  leave
+} = require('../../alerts/')
 
 const data = {
   name: 'Leave',
@@ -32,7 +34,7 @@ const data = {
         }),
         new ReactCommand({
           emoji: ':RedTick:457860110056947712',
-          action: () => '`Leave canceled.`'
+          action: ({ msg }) => msg.delete().then(() => '`Leave canceled.`').catch((ignore) => ignore)
         })
       ]
 

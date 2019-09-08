@@ -1,8 +1,10 @@
-const pageRegex = /page (\d+?)/
+const {
+  join
+} = require('path')
 
-const { join } = require('path')
-
-const { SUPPORT_SERVER } = process.env
+const {
+  SUPPORT_SERVER
+} = process.env
 
 const {
   Command,
@@ -21,7 +23,7 @@ const data = {
   options: {
     args: [{ name: 'page #' }]
   },
-  action: async ({ agent, client, msg, args: [page] }) => {
+  action: async ({ agent, client, msg, args: [page = 1] }) => {
     const pkg = require(join(process.cwd(), '/package.json'))
 
     const helpMenuData = {
@@ -38,9 +40,7 @@ const data = {
       new ReactCommand({
         emoji: '↩',
         action: async ({ msg }) => {
-          const page = parseInt(msg.embeds[0].fields[0].name.match(pageRegex)[1])
-
-          helpMenuData.page = page - 2
+          helpMenuData.page -= 1
           const helpMenu = await agent.buildHelp(helpMenuData)
 
           msg.edit({ embed: helpMenu })
@@ -49,9 +49,7 @@ const data = {
       new ReactCommand({
         emoji: '↪',
         action: async ({ msg }) => {
-          const page = parseInt(msg.embeds[0].fields[0].name.match(pageRegex)[1])
-
-          helpMenuData.page = page + 1
+          helpMenuData.page += 1
           const helpMenu = await agent.buildHelp(helpMenuData)
 
           msg.edit({ embed: helpMenu })
@@ -64,12 +62,14 @@ const data = {
       options: {
         check: ({ msg, prefix }) => msg.content.startsWith(prefix + 'help'),
         args: [{ name: 'page #' }],
-        refreshOnUse: true
+        refreshOnUse: true,
+        shiftCount: 1
       },
-      action: async ({ msg, args: [page], lastResponse }) => {
+      action: async ({ msg, args: [page = 1], triggerResponse }) => {
         helpMenuData.page = page
         const helpMenu = await agent.buildHelp(helpMenuData)
-        lastResponse.edit({ embed: helpMenu })
+
+        triggerResponse.edit({ embed: helpMenu })
       }
     })
 

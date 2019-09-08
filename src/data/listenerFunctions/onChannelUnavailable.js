@@ -1,7 +1,7 @@
 const {
   deleteRoom,
   leave
-} = require('../alerts')
+} = require('../alerts/')
 
 module.exports = async function (guild) {
   const data = await this._knex.get({
@@ -28,7 +28,9 @@ module.exports = async function (guild) {
           }
         }).then(() => newChannel.createMessage(`**Your transmission channel has changed to ${channel.name} due to permission changes.**`))
       } else {
-        const { owner } = await this._knex.get({
+        const {
+          owner
+        } = await this._knex.get({
           table: 'rooms',
           columns: 'owner',
           where: {

@@ -1,6 +1,10 @@
-const { Await } = require('cyclone-engine')
+const {
+  Await
+} = require('cyclone-engine')
 
-const { rename } = require('../../alerts')
+const {
+  rename
+} = require('../../alerts/')
 
 const data = {
   name: 'Name',

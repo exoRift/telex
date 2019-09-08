@@ -6,13 +6,16 @@ const {
 } = process.env
 
 const Eris = require('eris')
-const { Agent } = require('cyclone-engine')
+const {
+  Agent
+} = require('cyclone-engine')
 
-const data = require('./src/data')
+const data = require('./src/data/')
 const databaseTables = require('./src/data/tables.json')
 
 const {
   transmit,
+  buildPanel,
   compileMessage
 } = require('./src/data/utils.js')
 
@@ -20,12 +23,12 @@ const {
   onGuildUpdate,
   onGuildDelete,
   onChannelUnavailable
-} = require('./src/data/listenerFunctions')
+} = require('./src/data/listenerFunctions/')
 
 const agent = new Agent({
   Eris,
   token: TOKEN,
-  chData: data,
+  handlerData: data,
   databaseOptions: {
     connectionURL: DATABASE_URL,
     client: 'pg',
@@ -35,18 +38,43 @@ const agent = new Agent({
     prefix: PREFIX,
     dblToken: DBL_TOKEN,
     postMessageFunction: (msg, res) => {
-      if (res && res.command) {
-        console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name}*`)
-      } else if ((msg.content || msg.attachments.length) && !msg.type) {
+      if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || res.command._id}*`)
+      else if ((msg.content || msg.attachments.length) && !msg.type) {
         compileMessage.call(agent, msg)
           .then(agent.transmit)
           .catch((ignore) => ignore)
       }
+    },
+    statusMessage: (editStatus, agent) => {
+      let status = false
+
+      function setStatus () {
+        if (status) {
+          agent._knex.count('rooms').then((rooms) => {
+            editStatus({
+              name: 'Rooms: ' + rooms
+            })
+          })
+        } else {
+          editStatus({
+            name: `Prefix: '${PREFIX}'`,
+            type: 2
+          })
+        }
+      }
+
+      setInterval(() => {
+        status = !status
+
+        setStatus()
+      }, 300000)
+
+      setStatus()
     }
   }
 })
 agent.transmit = transmit.bind(agent)
-agent.polls = {}
+agent.buildPanel = buildPanel.bind(agent)
 
 agent._client.on('guildUpdate', onGuildUpdate.bind(agent))
 agent._client.on('guildDelete', onGuildDelete.bind(agent))

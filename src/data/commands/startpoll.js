@@ -4,6 +4,14 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
+function buildField (choiceCounts, choiceName, index) {
+  return {
+    name: `${String(index + 1)}⃣  ${choiceName}`,
+    value: `*${choiceCounts[index]}*`,
+    inline: true
+  }
+}
+
 const data = {
   name: 'startpoll',
   desc: 'Initiate a room-wide poll that lasts 10 minutes (Choices separated by parenthesis)',
@@ -31,20 +39,9 @@ const data = {
       if (roomData.owner === msg.channel.guild.id) {
         choices = choices.split(' ').slice(0, 9)
 
-        const id = String(Date.now())
-
-        agent.polls[id] = {
-          voted: [],
-          choices: []
-        }
-        for (let i = 0; i < choices.length; i++) agent.polls[id].choices.push(0)
-
-        const buildField = (c, i) => {
-          return {
-            name: `${String(i + 1)}⃣  ${choices[i]}`,
-            value: `*${c}*`,
-            inline: true
-          }
+        const poll = {
+          votes: [],
+          choices: new Array(choices.length).fill(0)
         }
 
         const response = {
@@ -54,42 +51,31 @@ const data = {
               icon_url: msg.channel.guild.iconURL
             },
             title: `**${name}**`,
-            description: `Poll from: __${msg.channel.guild.name}__\nInitiated by: **${msg.author.username}**`,
+            description: `Poll from: __${msg.channel.guild.name}__`,
             color: 16776960,
-            fields: agent.polls[id].choices.map(buildField),
+            fields: choices.map(buildField.bind(this, poll.choices)),
             footer: {
-              text: 'ID: ' + id
+              text: `Initiated by: ${msg.author.username}`
             }
           }
         }
 
         return agent.transmit({ room: guildData.room, msg: response }).then((responses) => {
-          for (const response of responses) {
-            agent._reactionHandler.bindInterface(response, new ReactInterface({
-              buttons: choices.map((c, i) => new ReactCommand({
-                emoji: String(i + 1) + '⃣',
-                action: ({ emoji, user }) => {
-                  if (agent.polls[id] && !agent.polls[id].voted.includes(user.id)) {
-                    agent.polls[id].choices[parseInt(emoji.name.slice(0, 1)) - 1]++
-                    agent.polls[id].voted.push(user.id)
-                  }
-                }
-              }))
-            }))
-          }
-
-          const interval = setInterval(() => {
+          const refresh = setInterval(() => {
             for (const response of responses) {
-              response.embeds[0].fields = agent.polls[id].choices.map(buildField)
+              response.embeds[0].fields = choices.map(buildField.bind(this, poll.choices))
 
               response.edit({
                 embed: response.embeds[0]
               })
             }
-          }, 5000)
+          }, 8000)
 
-          setTimeout(() => {
-            clearInterval(interval)
+          const autoClose = setTimeout(() => closePoll(), 600000)
+
+          const closePoll = () => {
+            clearInterval(refresh)
+            clearTimeout(autoClose)
 
             for (const response of responses) {
               response.embeds[0].color = 16711680
@@ -97,6 +83,8 @@ const data = {
               response.edit({
                 embed: response.embeds[0]
               })
+
+              agent._reactionHandler._reactInterfaces.delete(response.id)
             }
 
             agent.transmit({
@@ -110,16 +98,37 @@ const data = {
                   title: '**The results are in!**',
                   description: `**${name}**`,
                   color: 65535,
-                  fields: agent.polls[id].choices.map(buildField),
+                  fields: choices.map(buildField.bind(this, poll.choices)),
                   footer: {
-                    text: 'ID: ' + id
+                    text: `Initiated by: ${msg.author.username}`
                   }
                 }
               }
             })
+          }
 
-            delete agent.polls[id]
-          }, 600000)
+          for (const response of responses) {
+            const buttons = choices.map((c, i) => new ReactCommand({
+              emoji: String(i + 1) + '⃣',
+              action: ({ emoji, user }) => {
+                if (!poll.votes.includes(user.id)) {
+                  poll.choices[parseInt(emoji.name.slice(0, 1)) - 1]++
+                  poll.votes.push(user.id)
+                }
+              }
+            }))
+
+            if (response.channel.guild.id === msg.channel.guild.id) {
+              buttons.push(new ReactCommand({
+                emoji: '❌',
+                action: closePoll
+              }))
+            }
+
+            agent._reactionHandler.bindInterface(response, new ReactInterface({
+              buttons
+            }))
+          }
 
           return 'Poll created!'
         })
