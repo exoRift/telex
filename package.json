@@ -11,7 +11,7 @@
   "author": "mets11rap",
   "license": "MIT",
   "dependencies": {
-    "cyclone-engine": "^1.2.3",
+    "cyclone-engine": "^1.2.4",
     "dblapi.js": "^2.3.0",
     "eris": "^0.10.1",
     "pg": "^7.12.1"
