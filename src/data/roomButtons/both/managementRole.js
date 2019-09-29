@@ -15,7 +15,9 @@ const data = {
             timeout: 10000,
             args: [{ name: 'roleName', mand: true }]
           },
-          action: async ({ agent, msg: response, args: [roleName], knex }) => {
+          action: async ({ agent, msg: response, args: [roleName], knex, triggerResponse }) => {
+            triggerResponse.delete().catch((ignore) => ignore)
+
             const role = response.channel.guild.roles.find((r) => r.name === roleName)
 
             const {
@@ -24,7 +26,7 @@ const data = {
               table: 'guilds',
               columns: 'room',
               where: {
-                id: msg.channel.guild.id
+                id: response.channel.guild.id
               }
             })
 
@@ -32,13 +34,13 @@ const data = {
               return knex.update({
                 table: 'guilds',
                 where: {
-                  id: msg.channel.guild.id
+                  id: response.channel.guild.id
                 },
                 data: {
                   adminrole: role.id
                 }
               }).then(async () => {
-                msg.edit(await agent.buildPanel(room, msg.channel.guild.id)).catch((ignore) => ignore)
+                msg.edit(await agent.buildPanel(room, response.channel.guild.id)).catch((ignore) => ignore)
                 response.delete().catch((ignore) => ignore)
               })
             } else return '`Could not find role.`'

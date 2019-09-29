@@ -6,7 +6,7 @@ const data = {
   name: 'Transmission Channel',
   value: ({ guildData }) => `<#${guildData.channel}>`,
   emoji: '📜',
-  action: () => {
+  action: ({ msg }) => {
     return {
       content: 'Type the new transmission channel (Cancels after 10 seconds):',
       options: {
@@ -15,22 +15,37 @@ const data = {
             timeout: 10000,
             args: [{ name: 'channel', mand: true }]
           },
-          action: ({ client, msg, args: [channelName], knex }) => {
-            const channel = msg.channel.guild.channels.find(msg.channelMentions.length
-              ? (c) => c.id === msg.channelMentions[0]
+          action: async ({ agent, client, msg: response, args: [channelName], knex, triggerResponse }) => {
+            triggerResponse.delete().catch((ignore) => ignore)
+
+            const channel = response.channel.guild.channels.find(response.channelMentions.length
+              ? (c) => c.id === response.channelMentions[0]
               : (c) => c.name.toLowerCase() === channelName.toLowerCase())
 
             if (channel) {
               if (channel.permissionsOf(client.user.id).has('sendMessages')) {
+                const {
+                  room
+                } = await knex.get({
+                  table: 'guilds',
+                  columns: 'room',
+                  where: {
+                    id: response.channel.guild.id
+                  }
+                })
+
                 return knex.update({
                   table: 'guilds',
                   where: {
-                    id: msg.channel.guild.id
+                    id: response.channel.guild.id
                   },
                   data: {
                     channel: channel.id
                   }
-                }).then(() => `Your transmission channel has been set to **${channel.name}**.`)
+                }).then(async () => {
+                  msg.edit(await agent.buildPanel(room, response.channel.guild.id)).catch((ignore) => ignore)
+                  response.delete().catch((ignore) => ignore)
+                })
               } else return `\`The bot does not have permission to send messages in **${channel.name}**.\``
             }
 
