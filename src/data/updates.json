@@ -1,7 +1,7 @@
 {
   "0.0.6": {
     "date": "TBD",
-    "notes": "Changing the transmission channel now supports channel mentions rather than just the name\nTweaked the look of invite cards\nAdded the ability to initiate a room-wide poll (Looking at you, gaming/faction groups)\nAdded failsafe for when an invite is accepted while already in a room\nAdded a check for DM permissions when the password is being changed\nUpdated to Cyclone 1.2.4\nThe status message now alternates between the prefix and room count\nSeverval features are now faster"
+    "notes": "Changing the transmission channel now supports channel mentions rather than just the name\nTweaked the look of invite cards\nAdded the ability to initiate a room-wide poll (Looking at you, gaming/faction groups)\nAdded failsafe for when an invite is accepted while already in a room\nAdded a check for DM permissions when the password is being changed\nUpdated to Cyclone 1.2.4\nThe status message now alternates between the prefix and room count\nSeverval features are now faster\nThe `find` command now uses a bar delim for users with spaces in their name"
   },
   "0.0.5": {
     "date": "7/3/19",

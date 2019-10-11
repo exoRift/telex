@@ -10,7 +10,7 @@ const data = {
   name: 'find',
   desc: 'Return a user\'s ID (useful for mentioning across guilds)',
   options: {
-    args: [{ name: 'username', mand: true }, { name: 'discriminator', mand: true }]
+    args: [{ name: 'username', mand: true, delim: '|' }, { name: 'discriminator', mand: true }]
   },
   action: ({ client, args: [username, discriminator] }) => {
     const guildMembers = client.guilds.map((g) => g.members)
