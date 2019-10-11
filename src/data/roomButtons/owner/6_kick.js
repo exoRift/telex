@@ -18,7 +18,9 @@ const data = {
             timeout: 10000,
             args: [{ name: 'guild', mand: true }]
           },
-          action: async ({ agent, client, msg, args: [guildName], knex }) => {
+          action: async ({ agent, client, msg, args: [guildName], knex, triggerResponse }) => {
+            triggerResponse.delete().catch((ignore) => ignore)
+
             const target = client.guilds.find((g) => g.name.toLowerCase() === guildName.toLowerCase())
 
             if (target) {
@@ -45,7 +47,7 @@ const data = {
                     where: {
                       id: target.id
                     }
-                  }).then(() => `**${target.name}** has been kicked from **${roomData.name}**.`)
+                  }).then(() => msg.delete().catch((ignore) => ignore))
                 })
               }
 

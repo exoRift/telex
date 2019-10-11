@@ -29,8 +29,10 @@ const data = {
             timeout: 10000,
             args: [{ name: 'password', mand: true }]
           },
-          action: async ({ agent, args: [password] }) => {
+          action: async ({ agent, msg: response, args: [password], triggerResponse }) => {
             if (password === pass) {
+              triggerResponse.delete().catch((ignore) => ignore)
+
               await agent.transmit({ room: name, msg: deleteRoom({ roomName: name }) })
 
               await knex.delete({
@@ -45,6 +47,9 @@ const data = {
                   room: name
                 }
               })
+
+              response.delete().catch((ignore) => ignore)
+              msg.delete().catch((ignore) => ignore)
 
               return `Room **${name}** deleted.`
             }

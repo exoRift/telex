@@ -12,23 +12,29 @@ const data = {
   action: ({ agent, msg, knex }) => {
     return {
       content: 'Type your announcement (Cancels in 10 seconds):',
-      wait: new Await({
-        options: {
-          timeout: 10000,
-          args: [{ name: 'announcement' }]
-        },
-        action: ({ args: [announcement] }) => {
-          return knex.get({
-            table: 'guilds',
-            columns: 'room',
-            where: {
-              id: msg.channel.guild.id
-            }
-          }).then(({ room }) =>
-            agent.transmit({ room, msg: announce({ guildName: msg.channel.guild.name, content: announcement }) })
-          )
-        }
-      })
+      options: {
+        wait: new Await({
+          options: {
+            timeout: 10000,
+            args: [{ name: 'announcement' }]
+          },
+          action: ({ msg: response, args: [announcement], triggerResponse }) => {
+            triggerResponse.delete().catch((ignore) => ignore)
+
+            return knex.get({
+              table: 'guilds',
+              columns: 'room',
+              where: {
+                id: msg.channel.guild.id
+              }
+            }).then(({ room }) => {
+              agent.transmit({ room, msg: announce({ guildName: msg.channel.guild.name, content: announcement }) })
+
+              response.delete().catch((ignore) => ignore)
+            })
+          }
+        })
+      }
     }
   }
 }

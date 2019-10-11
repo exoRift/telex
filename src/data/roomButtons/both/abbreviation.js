@@ -17,6 +17,7 @@ const data = {
           },
           action: ({ agent, msg: response, args: [abbreviation], knex, triggerResponse }) => {
             triggerResponse.delete().catch((ignore) => ignore)
+
             if (abbreviation.length > 5) return '`Abbreviation too long.`'
 
             knex.update({
