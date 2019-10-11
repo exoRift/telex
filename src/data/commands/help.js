@@ -60,7 +60,7 @@ const data = {
     const wait = new Await({
       time: 15000,
       options: {
-        check: ({ msg, prefix }) => msg.content.startsWith(prefix + 'help'),
+        check: (msg) => msg.content.startsWith('help'),
         args: [{ name: 'page #' }],
         refreshOnUse: true,
         shiftCount: 1
