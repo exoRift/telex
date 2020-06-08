@@ -4,63 +4,55 @@ const {
 
 const {
   abbreviate
-} = require('../utils.js')
-
-const join = require('./join.js')
+} = require('../utils/')
 
 const data = {
   name: 'room',
   desc: 'Open the room management panel',
-  action: async ({ agent, client, msg, knex }) => {
-    let guildData = await knex.get({
-      table: 'guilds',
-      where: {
-        id: msg.channel.guild.id
-      }
-    })
+  options: {
+    guildOnly: true
+  },
+  action: ({ agent, msg }) => {
+    return agent.attachments.db('guilds')
+      .select('room')
+      .where('id', msg.channel.guild.id)
+      .then(async ([guildData]) => {
+        if ((guildData && msg.member.roles.includes(guildData.adminrole)) || msg.author.id === msg.channel.guild.ownerID) {
+          if (!guildData) {
+            let name = `${msg.author.username}#${msg.author.discriminator}'s room`
 
-    if (!guildData) {
-      if (msg.author.id === msg.channel.guild.ownerID) {
-        const room = `${msg.author.username}#${msg.author.discriminator}'s room`
+            await agent.attachments.db('rooms')
+              .select('name')
+              .where('name', name)
+              .then(async ([existing]) => {
+                if (existing) name = Date.now()
 
-        const existing = await knex.get({
-          table: 'rooms',
-          columns: 'pass',
-          where: {
-            name: room
+                guildData = {
+                  room: name
+                }
+
+                await agent.attachments.db('rooms')
+                  .insert({
+                    name,
+                    pass: '1234',
+                    owner: msg.channel.guild.id
+                  })
+
+                await agent.attachments.db('guilds')
+                  .insert({
+                    id: msg.channel.guild.id,
+                    channel: agent.attachments.getValidChannel(msg.channel.guild, msg.channel).id,
+                    room: name,
+                    abbreviation: abbreviate(msg.channel.guild.name)
+                  })
+
+                await msg.channel.createMessage('Room created! By default, your password is `1234`.')
+              })
           }
-        })
 
-        if (existing) await join.action({ agent, client, msg, args: [room, existing.pass], knex })
-        else {
-          guildData = {
-            id: msg.channel.guild.id,
-            channel: msg.channel.id,
-            room,
-            abbreviation: abbreviate(msg.channel.guild.name)
-          }
-
-          await knex.insert({
-            table: 'guilds',
-            data: guildData
-          })
-
-          await knex.insert({
-            table: 'rooms',
-            data: {
-              name: room,
-              pass: '1234',
-              owner: msg.channel.guild.id
-            }
-          })
-          msg.channel.createMessage('Room created! By default, your password is `1234`.')
-        }
-      } else return '`You are unauthorized to do that`'
-    }
-
-    if (!msg.member.roles.includes(guildData.adminrole) && msg.author.id !== msg.channel.guild.ownerID) return '`You are unauthorized to do that`'
-
-    return agent.buildPanel(guildData.room, msg.channel.guild.id)
+          return agent.attachments.buildPanel(guildData.room, msg.channel.guild.id)
+        } else return '`You are unauthorized to do that`'
+      })
   }
 }
 

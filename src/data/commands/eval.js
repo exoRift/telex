@@ -28,16 +28,19 @@ const data = {
     args: [{ name: 'code' }],
     restricted: true
   },
-  action: async ({ agent, client, commands, replacers, msg, args: [code], knex }) => {
+  action: async ({ agent, msg, args: [code] }) => {
     let result
     const startTime = Date.now()
+
     try {
       result = await eval(code) // eslint-disable-line
     } catch (err) {
       result = err
     }
     const stopTime = Date.now()
+
     let output
+
     if (result instanceof Error || result instanceof Promise) output = String(result)
     else output = inspect(result)
 

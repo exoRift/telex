@@ -1,0 +1,21 @@
+1.0.0
+-
+### **New features**
+- Changing the transmission channel now supports channel mentions rather than just the name
+- Added the ability to initiate a room-wide poll (Looking at you, gaming/faction groups)
+- The `find` command now uses a bar delimiter for users with spaces in their name
+
+### **Quality of life**
+- Upgraded to Cyclone 1.3.0
+- The status message now alternates between the prefix and room count
+- Severval features are now faster
+
+### **Important notes**
+- Tweaked the look of invite cards
+- Added a check for DM permissions when the password is being changed
+
+### **Bug fixes**
+- Added failsafe for when an invite is accepted while already in a room
+
+### **Removed**
+- The updates command

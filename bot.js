@@ -6,42 +6,55 @@ const {
 } = process.env
 
 const Eris = require('eris')
+const Knex = require('knex')
 const {
   Agent
 } = require('cyclone-engine')
+const DBL = require('dblapi.js')
 
-const data = require('./src/data/')
-const databaseTables = require('./src/data/tables.json')
+const commands = require('./src/data/commands/')
+const intents = require('./src/data/utils/intents.json')
 
 const {
   transmit,
   buildPanel,
-  compileMessage
-} = require('./src/data/utils.js')
+  compileMessage,
+  getValidChannel,
+  deleteRoom
+} = require('./src/data/utils/')
 
 const {
   onGuildUpdate,
   onGuildDelete,
   onChannelUnavailable
-} = require('./src/data/listenerFunctions/')
+} = require('./src/data/listeners/')
+
+const knex = new Knex({
+  client: 'pg',
+  connection: DATABASE_URL,
+  pool: {
+    min: 1,
+    max: 1
+  }
+})
 
 const agent = new Agent({
   Eris,
   token: TOKEN,
-  handlerData: data,
-  databaseOptions: {
-    connectionURL: DATABASE_URL,
-    client: 'pg',
-    tables: databaseTables
+  handlerData: {
+    commands,
+    reactCommands: [],
+    options: {
+      prefix: PREFIX
+    }
   },
-  agentOptions: {
-    prefix: PREFIX,
-    dblToken: DBL_TOKEN,
+  options: {
+    intents,
     postMessageFunction: (msg, res) => {
-      if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || res.command._id}*`)
+      if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
       else if ((msg.content || msg.attachments.length) && !msg.type) {
         compileMessage.call(agent, msg)
-          .then(agent.transmit)
+          .then(agent.attachments.transmit)
           .catch((ignore) => ignore)
       }
     },
@@ -49,12 +62,12 @@ const agent = new Agent({
       let status = false
 
       function setStatus () {
-        if (status) {
-          agent._knex.count('rooms').then((rooms) => {
-            editStatus({
-              name: 'Rooms: ' + rooms
-            })
-          })
+        if (!status) {
+          agent.attachments.db('rooms')
+            .count()
+            .then(([{ count }]) => editStatus({
+              name: 'Rooms: ' + count
+            }))
         } else {
           editStatus({
             name: `Prefix: '${PREFIX}'`,
@@ -73,31 +86,41 @@ const agent = new Agent({
     }
   }
 })
-agent.transmit = transmit.bind(agent)
-agent.buildPanel = buildPanel.bind(agent)
 
-agent._client.on('guildUpdate', onGuildUpdate.bind(agent))
-agent._client.on('guildDelete', onGuildDelete.bind(agent))
-agent._client.on('guildRoleUpdate', onChannelUnavailable.bind(agent))
-agent._client.on('guildRoleCreate', onChannelUnavailable.bind(agent))
-agent._client.on('guildRoleDelete', onChannelUnavailable.bind(agent))
-agent._client.on('channelUpdate', (channel) => onChannelUnavailable.call(agent, channel.guild))
-agent._client.on('channelDelete', (channel) => onChannelUnavailable.call(agent, channel.guild))
+const dbl = new DBL(DBL_TOKEN, agent.client)
+
+agent.attach('db', knex)
+agent.attach('dbl', dbl)
+agent.attach('transmit', transmit.bind(agent))
+agent.attach('buildPanel', buildPanel.bind(agent))
+agent.attach('getValidChannel', getValidChannel.bind(agent))
+agent.attach('deleteRoom', deleteRoom.bind(agent))
+
+agent.client.on('guildUpdate', onGuildUpdate.bind(agent))
+agent.client.on('guildDelete', onGuildDelete.bind(agent))
+agent.client.on('guildRoleUpdate', onChannelUnavailable.bind(agent))
+agent.client.on('guildRoleCreate', onChannelUnavailable.bind(agent))
+agent.client.on('guildRoleDelete', onChannelUnavailable.bind(agent))
+agent.client.on('channelUpdate', (channel) => onChannelUnavailable.call(agent, channel.guild))
+agent.client.on('channelDelete', (channel) => onChannelUnavailable.call(agent, channel.guild))
 
 agent.connect().then(() => {
   setTimeout(() => {
-    agent._knex.select({
-      table: 'guilds',
-      columns: ['id', 'channel']
-    }).then((guilds) => {
-      for (const guildData of guilds) {
-        const guild = agent._client.guilds.get(guildData.id)
+    console.log('Initiating Prune')
 
-        if (!guild) {
-          guildData.name = 'deleted-guild'
-          onGuildDelete.call(agent, guildData)
-        } else onChannelUnavailable.call(agent, guild)
-      }
-    })
-  }, 5000)
+    knex('guilds')
+      .select(['id', 'channel'])
+      .then((res) => {
+        for (const guildData of res) {
+          const guild = agent.client.guilds.get(guildData.id)
+
+          if (guild) onChannelUnavailable.call(agent, guild)
+          else {
+            guildData.name = 'deleted-guild'
+
+            onGuildDelete.call(agent, guildData)
+          }
+        }
+      })
+  }, 10000) // Ready event fires when not all guilds have been fetched yet. Waiting for fix
 })

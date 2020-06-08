@@ -1,5 +1,5 @@
 const {
   requireDirToArray
-} = require('../utils/')
+} = require('../../utils')
 
 module.exports = requireDirToArray(__dirname)

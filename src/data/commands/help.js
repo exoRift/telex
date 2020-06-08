@@ -3,7 +3,8 @@ const {
 } = require('path')
 
 const {
-  SUPPORT_SERVER
+  SUPPORT_SERVER,
+  PREFIX
 } = process.env
 
 const {
@@ -13,46 +14,44 @@ const {
   ReactInterface
 } = require('cyclone-engine')
 
-const {
-  prefixIcon
-} = require('../utils.js').links
-
 const data = {
   name: 'help',
   desc: 'Display this menu',
   options: {
     args: [{ name: 'page #' }]
   },
-  action: async ({ agent, client, msg, args: [page = 1] }) => {
+  action: ({ agent, msg, args: [page] }) => {
     const pkg = require(join(process.cwd(), '/package.json'))
 
     const helpMenuData = {
-      description: `${client.user.username} is a bot that can allow you to set up rooms that guilds can connect to and have chat across all connected guilds. Click [here](https://discordbots.org/bot/${client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
+      desc: `${agent.client.user.username} is a bot that can allow you to set up rooms that guilds can connect to and have chat across all connected guilds. Click [here](https://discordbots.org/bot/${agent.client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
       supportServerInviteCode: SUPPORT_SERVER,
       color: 33023,
-      prefixImage: prefixIcon,
-      version: pkg.version,
-      page
+      prefixImage: 'https://raw.githubusercontent.com/exoRift/guildlink/master/assets/Prefix.png',
+      version: pkg.version
     }
-    const helpMenu = await agent.buildHelp(helpMenuData)
+
+    const {
+      embed
+    } = agent.buildHelp(helpMenuData, page)
 
     const buttons = [
       new ReactCommand({
         emoji: '↩',
-        action: async ({ msg }) => {
-          helpMenuData.page -= 1
-          const helpMenu = await agent.buildHelp(helpMenuData)
+        action: ({ msg }) => {
+          page--
+          embed.fields = agent.buildHelp(helpMenuData, page).embed.fields
 
-          msg.edit({ embed: helpMenu })
+          msg.edit({ embed })
         }
       }),
       new ReactCommand({
         emoji: '↪',
-        action: async ({ msg }) => {
-          helpMenuData.page += 1
-          const helpMenu = await agent.buildHelp(helpMenuData)
+        action: ({ msg }) => {
+          page++
+          embed.fields = agent.buildHelp(helpMenuData, page).embed.fields
 
-          msg.edit({ embed: helpMenu })
+          msg.edit({ embed })
         }
       })
     ]
@@ -63,25 +62,22 @@ const data = {
         check: (msg) => msg.content.startsWith('help'),
         args: [{ name: 'page #' }],
         refreshOnUse: true,
-        shiftCount: 1
+        shiftCount: PREFIX.length
       },
-      action: async ({ msg, args: [page = 1], triggerResponse }) => {
-        helpMenuData.page = page
-        const helpMenu = await agent.buildHelp(helpMenuData)
+      action: ({ msg, args: [page], triggerResponse }) => {
+        embed.fields = agent.buildHelp(helpMenuData, page).embed.fields
 
-        triggerResponse.edit({ embed: helpMenu })
+        triggerResponse.edit({ embed })
       }
     })
 
     return {
-      embed: helpMenu,
+      embed,
       options: {
         wait,
         reactInterface: new ReactInterface({
           buttons,
           options: {
-            restricted: true,
-            designatedUsers: msg.author.id,
             removeReaction: true
           }
         })

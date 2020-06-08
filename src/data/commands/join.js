@@ -6,123 +6,96 @@ const {
 
 const {
   abbreviate
-} = require('../utils.js')
+} = require('../utils/')
 
 const {
   leave,
   join
-} = require('../alerts/')
+} = require('../utils/alerts/')
 
 const data = {
   name: 'join',
   desc: 'Join a room',
   options: {
-    args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }]
+    args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }],
+    guildOnly: true
   },
-  action: async ({ agent, client, msg, args: [roomName, password], knex }) => {
-    const guilds = await knex.select({
-      table: 'guilds',
-      columns: ['id', 'channel', 'room', 'adminrole']
-    })
-    const guild = guilds.find((g) => g.id === msg.channel.guild.id)
-    const room = await knex.get({
-      table: 'rooms',
-      columns: 'pass',
-      where: {
-        name: roomName
-      }
-    })
+  action: ({ agent, msg, args: [name, pass] }) => {
+    if (msg.author.id === msg.channel.guild.ownerID) {
+      return agent.attachments.db('rooms')
+        .select(['name', 'pass'])
+        .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
+        .then(([room]) => {
+          if (room) {
+            if (pass === room.pass) {
+              return agent.attachments.db('guilds')
+                .select(['id', 'channel', 'adminrole'])
+                .where('room', room.name)
+                .andWhere('id', msg.channel.guild.id)
+                .then((guilds) => {
+                  const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
 
-    if (!room) return '`Room does not exist.`'
-    if (password !== room.pass) return '`Password incorrect.`'
+                  if (guildData) {
+                    if (guildData.room === room.name) return `\`You are already in ${room.name}.\``
+                    else {
+                      const buttons = [
+                        new ReactCommand({
+                          emoji: '✅',
+                          action: () => {
+                            return agent.attachments.transmit({ room: room.name, msg: leave({ guildName: msg.channel.guild.name }) })
+                              .then(agent.attachments.db('guilds')
+                                .update('room', name)
+                                .where('id', msg.channel.guild.id))
+                              .then(agent.attachments.transmit({ room: room.name, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }))
+                              .then(() => `Successfully joined **${room.name}**.`)
+                          }
+                        }),
+                        new ReactCommand({
+                          emoji: ':RedTick:457860110056947712',
+                          action: () => '`Switch canceled.`'
+                        })
+                      ]
 
-    if (guild) {
-      const {
-        owner
-      } = await knex.get({
-        table: 'rooms',
-        columns: 'owner',
-        where: {
-          name: guild.room
-        }
-      })
+                      return {
+                        content: `You are already in the room **${guildData.room}**. Would you like to switch?`,
+                        options: {
+                          reactInterface: new ReactInterface({
+                            buttons,
+                            options: {
+                              deleteAfterUse: true,
+                              removeReactions: true,
+                              designatedUsers: guildData.adminrole
+                                ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
+                                  if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
 
-      if (msg.channel.guild.id === owner) return '`You can\'t join a room when you own one.`'
-      if (guild.room === roomName) return `\`You are already in ${roomName}.\``
+                                  return accum
+                                }, [msg.channel.guild.ownerID])
+                                : msg.channel.guild.ownerID
+                            }
+                          })
+                        }
+                      }
+                    }
+                  } else {
+                    const channel = agent.attachments.getValidChannel(msg.channel.guild, msg.channel)
 
-      const buttons = [
-        new ReactCommand({
-          emoji: '✅',
-          action: async () => {
-            await agent.transmit({ room: guild.room, msg: leave({ guildName: msg.channel.guild.name }) })
-
-            await knex.update({
-              table: 'guilds',
-              where: {
-                id: msg.channel.guild.id
-              },
-              data: {
-                room: roomName
-              }
-            })
-
-            return agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }).then(() => `Successfully joined **${roomName}**.`)
-          }
-        }),
-        new ReactCommand({
-          emoji: ':RedTick:457860110056947712',
-          action: () => '`Switch canceled.`'
+                    if (channel) {
+                      return agent.attachments.db('guilds')
+                        .insert({
+                          id: msg.channel.guild.id,
+                          channel: channel.id,
+                          room: room.name,
+                          abbreviation: abbreviate(msg.channel.guild.name)
+                        })
+                        .then(agent.attachments.transmit({ room: room.name, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.filter((g) => g.room === room.name).length }) }))
+                        .then(() => `Successfully joined **${room.name}**.`)
+                    }
+                  }
+                })
+            } else return '`Password incorrect.`'
+          } else return '`Room does not exist.`'
         })
-      ]
-
-      return {
-        content: `You are already in the room **${guild.room}**. Would you like to switch?`,
-        options: {
-          reactInterface: new ReactInterface({
-            buttons,
-            options: {
-              deleteAfterUse: true,
-              removeReactions: true,
-              restricted: true,
-              designatedUsers: guild.adminrole
-                ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-                  if (roles.find((r) => r === guild.adminrole)) accum.push(id)
-                  return accum
-                }, []).concat([msg.channel.guild.ownerID])
-                : msg.channel.guild.ownerID
-            }
-          })
-        }
-      }
-    }
-
-    const channel = msg.channel.permissionsOf(client.user.id).has('sendMessages')
-      ? msg.channel.id
-      : msg.channel.guild.channels.find((c) => c.permissionsOf(client.user.id).has('sendMessages') && !c.type).id
-
-    if (channel) {
-      return knex.insert({
-        table: 'guilds',
-        data: {
-          id: msg.channel.guild.id,
-          channel,
-          room: roomName,
-          abbreviation: abbreviate(msg.channel.guild.name)
-        }
-      }).then(async () => {
-        const guildsInRoom = await knex.select({
-          table: 'guilds',
-          columns: 'id',
-          where: {
-            room: roomName
-          }
-        })
-
-        agent.transmit({ room: roomName, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guildsInRoom.length }) })
-
-        return `Successfully joined **${roomName}**.`
-      })
-    }
+    } else return '`You are unauthorized to do that.`'
   }
 }
 
