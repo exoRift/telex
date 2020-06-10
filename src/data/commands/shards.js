@@ -22,7 +22,7 @@ const data = {
       embed: {
         author: {
           name: 'Latencies',
-          icon_url: 'https://raw.githubusercontent.com/exoRift/guildlink/master/assets/Ping.png'
+          icon_url: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Ping.png'
         },
         color: latencyAverage > 200 && latencyAverage < 300 ? 16776960 : latencyAverage > 300 ? 15933733 : 111111,
         fields,

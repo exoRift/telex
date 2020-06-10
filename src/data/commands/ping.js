@@ -12,7 +12,7 @@ const data = {
       embed: {
         author: {
           name: 'Ping',
-          icon_url: 'https://raw.githubusercontent.com/exoRift/guildlink/master/assets/Ping.png'
+          icon_url: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Ping.gif'
         },
         title: 'Bot Status',
         description: `Pong! Client: **${clientLatency}ms** API: **${shard.latency}ms** | Servers: **${agent.client.guilds.filter((g) => g.shard.id === shard.id).length}**`,

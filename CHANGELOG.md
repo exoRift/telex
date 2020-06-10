@@ -1,9 +1,13 @@
 1.0.0
 -
+# Rebranding
+Guildlink has been rebranded to be Telex
+
 ### **New features**
 - Changing the transmission channel now supports channel mentions rather than just the name
 - Added the ability to initiate a room-wide poll (Looking at you, gaming/faction groups)
 - The `find` command now uses a bar delimiter for users with spaces in their name
+- Any server in a room can now initiate a poll
 
 ### **Quality of life**
 - Upgraded to Cyclone 1.3.0
@@ -19,3 +23,4 @@
 
 ### **Removed**
 - The updates command
+- The `dblwidget` command

@@ -87,7 +87,7 @@ const data = {
                             title: `Invited by: __${msg.channel.guild.name}__`,
                             description: `Room name: **${guildData.room}**\nNumber of guilds in room: **${guilds.filter((g) => g.room === guildData.room).length}**`,
                             thumbnail: {
-                              url: 'https://raw.githubusercontent.com/exoRift/guildlink/master/assets/Invite.png'
+                              url: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Invite.png'
                             },
                             color: 2600252,
                             footer: {

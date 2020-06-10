@@ -24,10 +24,10 @@ const data = {
     const pkg = require(join(process.cwd(), '/package.json'))
 
     const helpMenuData = {
-      desc: `${agent.client.user.username} is a bot that can allow you to set up rooms that guilds can connect to and have chat across all connected guilds. Click [here](https://discordbots.org/bot/${agent.client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
+      desc: `${agent.client.user.username} is a bot allows you to set up rooms that servers can connect to and chat across all connected servers. Click [here](https://discordbots.org/bot/${agent.client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
       supportServerInviteCode: SUPPORT_SERVER,
       color: 33023,
-      prefixImage: 'https://raw.githubusercontent.com/exoRift/guildlink/master/assets/Prefix.png',
+      prefixImage: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Prefix.png',
       version: pkg.version
     }
 

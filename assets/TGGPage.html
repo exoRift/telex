@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <style>
+      :root {
+        --main-color: #4d83ff;
+        --accent-color: #004dff;
+        --text-color: black;
+        --accent-text-color: white;
+        --blurple: #7289da;
+        --dblurple: #2a46a8;
+        --durple: #2c2f33;
+        --whirple: #d3d0cc;
+      }
+      body {
+        background: linear-gradient(135deg, var(--blurple), var(--durple)) !important;
+      }
+      .columns .bot-img {
+        transition: 0.4s !important;
+        border-radius: 50% !important;
+        color: var(--text-color) !important;
+        box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, .8),
+                    4px 4px 8px 0px rgba(66, 49, 49, .2) !important;
+      }
+      .bot-img:hover {
+        transform: translateY(-6%) !important;
+      }
+      .bot-name {
+        animation: textcolors 2s ease-in-out 0s infinite alternate forwards !important;
+      }
+      #libclick {
+        color: var(--dblurple) !important;
+      }
+      #libclick:hover {
+        color: var(--blurple) !important;
+      }
+      .btn, .atag, .botpagebutton:not(#delete) {
+        transition: .5s !important;
+        background: var(--main-color) !important;
+        color: var(--text-color) !important;
+        border-radius: 6px !important;
+        border: none !important;
+      }
+      .atag {
+        border-radius: 6px 0 0 6px !important;
+      }
+      .btn:hover, .atag:hover, .botpagebutton:hover:not(#delete) {
+        transform: scaleY(.9) !important;
+        background: var(--accent-color) !important;
+        color: var(--accent-text-color) !important;
+      }
+      .atag::after {
+        transition: .5s !important;
+        border-left-color: var(--accent-color) !important;
+      }
+      .atag:hover::after {
+        transform: scale(1.1, .9) translateX(5px) !important;
+      }
+      .atag::before {
+        background: var(--accent-text-color) !important;
+      }
+      .atag:hover::before {
+        background: var(--text-color) !important;
+      }
+      .owners b {
+        transition: .5s;
+        background: var(--blurple) !important;
+      }
+      .owners b:hover {
+        filter: brightness(1.35);
+      }
+      .owners span, p {
+        color: var(--text-color) !important;
+      }
+      code {
+        border-radius: 5px !important;
+        color: var(--main-color) !important;
+        background: rgba(0, 0, 0, .6) !important;
+      }
+      .content {
+        transition: .4s !important;
+        color: var(--text-color) !important;
+        background: rgba(0, 0, 0, .4) !important;
+      }
+      .content:hover, .content:hover p {
+        background: rgba(0, 0, 0, .6) !important;
+        color: var(--accent-text-color) !important;
+      }
+      .content h1, .content h2, .content h3 {
+        color: var(--whirple) !important;
+      }
+      @keyframes textcolors {
+        from {
+          color: var(--main-color);
+        } to {
+          color: var(--accent-color);
+        }
+      }
+    </style>
+  </head>
+</html>
+
+<img alt='Banner' src='https://raw.githubusercontent.com/exoRift/telex/master/assets/Banner.png' width='400'>
+
+# Telex
+Telex is a bot allows you to set up rooms that servers can connect to and chat across all connected servers.
+
+Once the bot has joined a room, simply type in the assigned channel to transmit your message.
+-
+[![Discord Server](https://img.shields.io/badge/-Support%20Server-b.svg?colorA=697ec4&colorB=7289da&logo=discord)](https://discord.gg/Rqd8SJ9)
+![Version](https://img.shields.io/github/package-json/v/exoRift/telex.svg?label=Version)
+
+[![Discord Bot List Widget](https://discordbots.org/api/widget/462036425710501888.png?topcolor=4d83ff&middlecolor=004dff&usernamecolor=000000&certifiedcolor=0d94ba&datacolor=ffffff&labelcolor=4d83ff&highlightcolor=000000)](https://discordbots.org/bot/462036425710501888)
+
+## Type `|room` to create a room and get started!
+
+### Features included:
+- Inviting servers
+- Joining rooms
+- Joined-server Management
+- Announcements
+- Inter-server polling

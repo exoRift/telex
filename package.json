@@ -1,7 +1,7 @@
 {
-  "name": "guildlink",
+  "name": "telex",
   "version": "1.0.0",
-  "description": "A bot that allows you to set up inter-guild rooms that guilds can connect to and chat across.",
+  "description": "Allow communication between Discord servers by creating rooms you can invite other servers to. All messages sent in the designated channel will be echoed throughout all servers in the room",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/exoRift/guildlink.git"
+    "url": "git+https://github.com/exoRift/telex.git"
   },
   "keywords": [
     "javascript",
@@ -35,11 +35,12 @@
     "discord-bot",
     "eris",
     "knex",
-    "simple-knex",
-    "guildlink"
+    "guildlink",
+    "connect",
+    "link"
   ],
   "bugs": {
-    "url": "https://github.com/exoRift/guildlink/issues"
+    "url": "https://github.com/exoRift/telex/issues"
   },
-  "homepage": "https://github.com/exoRift/guildlink#readme"
+  "homepage": "https://exoRift.github.io/telex"
 }
