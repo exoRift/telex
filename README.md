@@ -1,4 +1,4 @@
-<img alt='Banner' src='assets/Banner.png' width='400'>
+<img alt='Banner' src='assets/Splash.png' width='400'>
 
 # Telex
 Telex is a bot allows you to set up rooms that servers can connect to and chat across all connected servers.
