@@ -1,3 +1,8 @@
+1.1.0
+-
+# **Important notes**
+- `startpoll` has been changed to `poll`
+
 1.0.0
 -
 # Rebranding

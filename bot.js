@@ -13,7 +13,6 @@ const {
 const DBL = require('dblapi.js')
 
 const commands = require('./src/data/commands/')
-const intents = require('./src/data/utils/intents.json')
 
 const {
   transmit,
@@ -38,6 +37,18 @@ const knex = new Knex({
   }
 })
 
+const permQuery = knex('guilds')
+  .select('id', 'adminrole')
+  .then((data) => data.reduce((acc, { id, adminrole }) => {
+    acc[id] = {
+      permissions: {
+        [adminrole]: 1
+      }
+    }
+
+    return acc
+  }, {}))
+
 const agent = new Agent({
   Eris,
   token: TOKEN,
@@ -49,13 +60,17 @@ const agent = new Agent({
     }
   },
   options: {
-    intents,
-    postMessageFunction: (msg, res) => {
-      if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
-      else if ((msg.content || msg.attachments.length) && !msg.type) {
-        compileMessage.call(agent, msg)
-          .then(agent.attachments.transmit)
-          .catch((ignore) => ignore)
+    guildOptions: {
+      permissions: permQuery
+    },
+    postEventFunctions: {
+      message: (msg, res) => {
+        if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
+        else if ((msg.content || msg.attachments.length) && !msg.type) {
+          compileMessage.call(agent, msg)
+            .then(agent.attachments.transmit)
+            .catch((ignore) => ignore)
+        }
       }
     },
     statusMessage: (editStatus, agent) => {
@@ -87,7 +102,7 @@ const agent = new Agent({
   }
 })
 
-const dbl = new DBL(DBL_TOKEN, agent.client)
+const dbl = new DBL(DBL_TOKEN)
 
 agent.attach('db', knex)
 agent.attach('dbl', dbl)
@@ -106,6 +121,8 @@ agent.client.on('channelDelete', (channel) => onChannelUnavailable.call(agent, c
 
 agent.connect().then(() => {
   setTimeout(() => {
+    dbl.postStats(agent.client.guilds.size)
+
     console.log('Initiating Prune')
 
     knex('guilds')

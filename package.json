@@ -4,23 +4,23 @@
   "description": "Allow communication between Discord servers by creating rooms you can invite other servers to. All messages sent in the designated channel will be echoed throughout all servers in the room",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
+    "start": "node ./",
     "lint": "eslint ./"
   },
   "author": "exoRift",
   "license": "MIT",
   "dependencies": {
-    "cyclone-engine": "^1.3.2",
+    "cyclone-engine": "^1.4.2",
     "dblapi.js": "^2.4.0",
-    "eris": "^0.10.1",
-    "knex": "^0.21.1",
-    "pg": "^7.18.2"
+    "eris": "^0.13.3",
+    "knex": "^0.21.2",
+    "pg": "^8.3.0"
   },
   "devDependencies": {
-    "eslint": "^7.2.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.21.2",
-    "eslint-plugin-node": "^8.0.1",
+    "eslint": "^7.5.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1"
   },
