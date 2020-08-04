@@ -17,7 +17,14 @@ const data = {
   desc: 'Initiate a room-wide poll that lasts 10 minutes (Choices separated by spaces)',
   options: {
     args: [{ name: 'name', mand: true, delim: '|' }, { name: 'choices', mand: true }],
-    guildOnly: true
+    guildOnly: true,
+    guide: {
+      color: 7829503,
+      fields: [{
+        name: 'Polling across multiple servers',
+        value: 'Provide the name of the poll and the choices\nThe name is separated from the choices with a bar (`|`)\nChoices are separated by spaces\nPolls last for an hour or until they\'re manually closed'
+      }]
+    }
   },
   action: async ({ agent, msg, args: [name, choices] }) => {
     const currentGuildSubquery = agent.attachments.db('guilds')
@@ -115,7 +122,9 @@ const data = {
         if (response.channel.guild.id === msg.channel.guild.id) {
           buttons.push(new ReactCommand({
             emoji: '❌',
-            action: closePoll
+            action: ({ user }) => {
+              if (agent.getTopPermissionLevel(msg.channel.guild.members.get(user.id)) >= 1) closePoll()
+            }
           }))
         }
 

@@ -1,7 +1,13 @@
 1.1.0
 -
-# **Important notes**
+### **New Features**
+- `|help COMMANDNAME` now brings up an expanded guide for a specific command
+
+### **Important notes**
 - `startpoll` has been changed to `poll`
+
+### **Bug Fixes**
+- Unauthorized users can no longer close polls
 
 1.0.0
 -

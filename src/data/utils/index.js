@@ -163,10 +163,7 @@ async function buildPanel (room, guild) {
       reactInterface: new ReactInterface({
         buttons: buttons.map((b) => new ReactCommand(b)),
         options: {
-          designatedUsers: guildData.adminrole ? guildObject.members.reduce((accum, { id, roles }) => {
-            if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
-            return accum
-          }, []).concat([guildObject.ownerID]) : guildObject.ownerID,
+          authLevel: 1,
           removeReaction: true
         }
       })
