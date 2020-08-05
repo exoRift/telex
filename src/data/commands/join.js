@@ -5,97 +5,75 @@ const {
 } = require('cyclone-engine')
 
 const {
-  abbreviate
-} = require('../utils/')
-
-const {
-  leave,
-  join
-} = require('../utils/alerts/')
+  alerts
+} = require('../util/')
 
 const data = {
   name: 'join',
   desc: 'Join a room',
   options: {
     args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }],
-    guildOnly: true
+    guildOnly: true,
+    authLevel: 1
   },
-  action: ({ agent, msg, args: [name, pass] }) => {
-    if (msg.author.id === msg.channel.guild.ownerID) {
-      return agent.attachments.db('rooms')
-        .select(['name', 'pass'])
-        .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
-        .then(([room]) => {
-          if (room) {
-            if (pass === room.pass) {
-              return agent.attachments.db('guilds')
-                .select(['id', 'channel', 'adminrole'])
-                .where('room', room.name)
-                .andWhere('id', msg.channel.guild.id)
-                .then((guilds) => {
-                  const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
+  action: async ({ agent, msg, args: [name, pass] }) => {
+    await msg.delete()
 
-                  if (guildData) {
-                    if (guildData.room === room.name) return `\`You are already in ${room.name}.\``
-                    else {
-                      const buttons = [
-                        new ReactCommand({
-                          emoji: '✅',
-                          action: () => {
-                            return agent.attachments.transmit({ room: room.name, msg: leave({ guildName: msg.channel.guild.name }) })
-                              .then(agent.attachments.db('guilds')
-                                .update('room', name)
-                                .where('id', msg.channel.guild.id))
-                              .then(agent.attachments.transmit({ room: room.name, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }))
-                              .then(() => `Successfully joined **${room.name}**.`)
-                          }
-                        }),
-                        new ReactCommand({
-                          emoji: ':RedTick:457860110056947712',
-                          action: () => '`Switch canceled.`'
-                        })
-                      ]
+    const [roomData] = await agent.attachments.db('rooms')
+      .select(['name', 'pass'])
+      .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
 
-                      return {
-                        content: `You are already in the room **${guildData.room}**. Would you like to switch?`,
-                        options: {
-                          reactInterface: new ReactInterface({
-                            buttons,
-                            options: {
-                              deleteAfterUse: true,
-                              removeReactions: true,
-                              designatedUsers: guildData.adminrole
-                                ? msg.channel.guild.members.reduce((accum, { id, roles }) => {
-                                  if (roles.find((r) => r === guildData.adminrole)) accum.push(id)
+    if (roomData) {
+      if (pass === roomData.pass) {
+        const guilds = await agent.attachments.db('guilds')
+          .select(['id', 'channel', 'room'])
+          .where('id', msg.channel.guild.id)
+          .andWhere('room', roomData.name)
 
-                                  return accum
-                                }, [msg.channel.guild.ownerID])
-                                : msg.channel.guild.ownerID
-                            }
-                          })
-                        }
-                      }
-                    }
-                  } else {
-                    const channel = agent.attachments.getValidChannel(msg.channel.guild, msg.channel)
+        const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
 
-                    if (channel) {
-                      return agent.attachments.db('guilds')
-                        .insert({
-                          id: msg.channel.guild.id,
-                          channel: channel.id,
-                          room: room.name,
-                          abbreviation: abbreviate(msg.channel.guild.name)
-                        })
-                        .then(agent.attachments.transmit({ room: room.name, msg: join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.filter((g) => g.room === room.name).length }) }))
-                        .then(() => `Successfully joined **${room.name}**.`)
-                    }
+        if (guildData) {
+          if (guildData.room === roomData.name) return `\`You are already in ${roomData.name}\``
+          else {
+            const buttons = [
+              new ReactCommand({
+                emoji: '✅',
+                action: () => {
+                  return agent.attachments.transmit({ room: guildData.room, msg: alerts.leave({ guildName: msg.channel.guild.name }) })
+                    .then(agent.attachments.db('guilds')
+                      .update('room', roomData.name)
+                      .where('id', msg.channel.guild.id))
+                    .then(agent.attachments.transmit({ room: roomData.name, msg: alerts.join({ guildName: msg.channel.guild.name, guildsInRoom: guilds.length }) }))
+                    .then(() => `Successfully joined **${roomData.name}**.`)
+                }
+              }),
+              new ReactCommand({
+                emoji: ':RedTick:457860110056947712',
+                action: () => '`Switch canceled`'
+              })
+            ]
+
+            return {
+              content: `You are already in the room **${guildData.room}**. Would you like to switch to **${roomData.name}**?`,
+              options: {
+                reactInterface: new ReactInterface({
+                  buttons,
+                  options: {
+                    deleteAfterUse: true,
+                    removeReactions: true,
+                    authLevel: 1
                   }
                 })
-            } else return '`Password incorrect.`'
-          } else return '`Room does not exist.`'
-        })
-    } else return '`You are unauthorized to do that.`'
+              }
+            }
+          }
+        } else {
+          const channel = agent.attachments.getValidChannel(msg.channel.guild, msg.channel)
+
+          if (channel) agent.attachments.joinRoom(agent.client, agent.attachments.db, msg.channel.guild, channel, roomData.name, guilds.filter((g) => g.room === roomData.name).length)
+        }
+      } else return '`Incorrect password`'
+    } else return `\`Could not find a room named "${name}"\``
   }
 }
 

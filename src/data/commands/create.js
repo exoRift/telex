@@ -22,15 +22,17 @@ const data = {
     }
   },
   action: async ({ agent, msg, args: [name, pass = '1234'] }) => {
+    await msg.delete()
+
     const [guildData] = await agent.attachments.db('guilds')
       .select('room')
       .where('id', msg.channel.guild.id)
 
     if (guildData) return `\`You are already in the room: ${guildData.room}\``
 
-    await routines.createRoom(name, pass, msg.channel.guild.id)
-
-    return 'Successfully created a room! Time to add some guilds to it'
+    return routines.createRoom(name, pass, msg.channel.guild.id)
+      .then(() => 'Successfully created a room! Time to add some guilds to it')
+      .catch(() => '`A room with that name already exists`')
   }
 }
 

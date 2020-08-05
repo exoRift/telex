@@ -118,13 +118,19 @@ async function compileMessage (db, msg, level = 0) {
 /**
  * Create a room
  * @async
- * @param {Knex}         db      The Knex client
- * @param {String}       name    The name of the room
- * @param {String}       pass    The password of the room
- * @param {Eris.Guild}   owner   The owner of the room
- * @param {Eris.Channel} channel The transmission channel of the owner
+ * @param {Knex}             db      The Knex client
+ * @param {String}           name    The name of the room
+ * @param {String}           pass    The password of the room
+ * @param {Eris.Guild}       owner   The owner of the room
+ * @param {Eris.TextChannel} channel The transmission channel of the owner
  */
 async function createRoom (db, name, pass, owner, channel) {
+  const [existing] = await db('rooms')
+    .select('name')
+    .where(db.raw('LOWER(name) = ?', name.toLowerCase()))
+
+  if (existing) throw Error('Name taken')
+
   await db('rooms')
     .insert({
       name,
@@ -207,6 +213,30 @@ function isValidChannel (client, channel) {
 }
 
 /**
+ * Make a guild join a room
+ * @param {Eris.Client}      client         The Eris client
+ * @param {Knex}             db             The Knex client
+ * @param {Eris.Guild}       guild          The guild
+ * @param {Eris.TextChannel} channel        The transmission channel
+ * @param {String}           room           The room to join
+ * @param {Number}           [guildCount=0] The number of guilds in the room
+ */
+function joinRoom (client, db, guild, channel, room, guildCount = 0) {
+  return db('guilds')
+    .insert({
+      id: guild.id,
+      channel: channel.id,
+      room: room,
+      callsign: abbreviate(guild.name)
+    })
+    .then(transmit(client, db, {
+      room: room.name,
+      msg: alerts.join({ guildName: guild.name, guildsInRoom: guildCount })
+    }))
+    .then(() => `Successfully joined **${room.name}**`)
+}
+
+/**
  * Make a guild leave its room
  * @async
  * @param {Eris.Client} client The Eris client
@@ -261,6 +291,7 @@ module.exports = {
   getValidChannel,
   pruneDB,
   isValidChannel,
+  joinRoom,
   leaveRoom,
   transmit
 }
