@@ -2,7 +2,9 @@ const {
   Command
 } = require('cyclone-engine')
 
-const statuses = require('../utils/emojis.json')
+const {
+  emojis
+} = require('../utils/emojis.json')
 
 const data = {
   name: 'shards',
@@ -13,7 +15,7 @@ const data = {
     const fields = agent.client.shards.map((shard) => {
       return {
         name: `${!msg.channel.type && shard.id === msg.channel.guild.shard.id ? '*' : ''}Shard ${shard.id}`,
-        value: `${shard.ready ? statuses.online : statuses.dnd} ${shard.ready ? shard.latency : 'OFFLINE'}ms`,
+        value: `${shard.ready ? emojis.online : emojis.dnd} ${shard.ready ? shard.latency : 'OFFLINE'}ms`,
         inline: true
       }
     })

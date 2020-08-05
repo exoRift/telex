@@ -17,7 +17,7 @@ const data = {
       .select(['id', 'room', 'abbreviation'])
       .where('room', 'in', currentGuildSubquery)
 
-    if (!guilds.length) return '`You are not currently in a room.`'
+    if (!guilds.length) return '`You are not currently in a room`'
 
     const [room] = await agent.attachments.db('rooms')
       .select(['name', 'owner'])

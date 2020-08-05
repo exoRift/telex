@@ -18,6 +18,7 @@ const data = {
   options: {
     args: [{ name: 'name', mand: true, delim: '|' }, { name: 'choices', mand: true }],
     guildOnly: true,
+    authLevel: 1,
     guide: {
       color: 7829503,
       fields: [{
@@ -32,13 +33,11 @@ const data = {
       .where('id', msg.channel.guild.id)
 
     const guilds = await agent.attachments.db('guilds')
-      .select(['id', 'channel', 'room', 'adminrole'])
+      .select(['id', 'channel', 'room'])
       .where('room', 'in', currentGuildSubquery)
 
     if (guilds.length) {
       const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
-
-      if (!msg.member.roles.includes(guildData.adminrole) && msg.author.id !== msg.channel.guild.ownerID) return '`You are unauthorized to do that`'
 
       choices = choices.split(' ').slice(0, 9)
 
@@ -134,7 +133,7 @@ const data = {
       }
 
       return 'Poll created!'
-    } else return '`You are not in a room.`'
+    } else return '`You are not in a room`'
   }
 }
 

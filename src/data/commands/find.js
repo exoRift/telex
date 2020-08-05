@@ -24,7 +24,7 @@ const data = {
               icon_url: user.avatarURL
             },
             title: `Status: ${statuses[user.game && user.game.type === 1 ? 'streaming' : user.status]}`,
-            description: '<@ID> to mention the user',
+            description: `\\<@${user.id}> to mention the user`,
             color: 6422766
           }
         }

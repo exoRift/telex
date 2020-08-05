@@ -2,6 +2,7 @@
 -
 ### **New Features**
 - `|help COMMANDNAME` now brings up an expanded guide for a specific command
+- `|find` now provides an easy user mention to copy paste rather than having to add the ID manually
 
 ### **Important notes**
 - `startpoll` has been changed to `poll`
