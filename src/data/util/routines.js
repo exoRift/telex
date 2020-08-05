@@ -83,15 +83,16 @@ async function buildPanel (client, db, room, guild) {
 /**
  * Compile Discord messages into content suitable for transmitting
  * @async
- * @param   {Knex}            db  The Knex client
- * @param   {Eris.Message}    msg The message to compile
- * @returns {Promise<Object>}     An object containing the transmission data
+ * @param   {Knex}            db        The Knex client
+ * @param   {Eris.Message}    msg       The message to compile
+ * @param   {Number}          [level=0] The authority level of the author
+ * @returns {Promise<Object>}           An object containing the transmission data
  */
-async function compileMessage (db, msg) {
+async function compileMessage (db, msg, level = 0) {
   if (msg.channel.type) throw Error('Invalid channel.')
 
   const [guildData] = db('guilds')
-    .select(['channel', 'room', 'abbreviation'])
+    .select(['channel', 'room', 'callsign'])
     .where('id', msg.channel.guild.id)
 
   if (guildData) {
@@ -99,8 +100,14 @@ async function compileMessage (db, msg) {
       .select('owner')
       .where('name', guildData.room)
 
-    const content = (msg.channel.guild.id === roomData.owner ? '👑 ' : '') +
-      `*${guildData.abbreviation}* **${msg.author.username}#${msg.author.discriminator}**` +
+    const content = (level > 0
+      ? level === Infinity
+        ? msg.channel.guild.id === roomData.owner
+          ? '🔻 '
+          : '🔶 '
+        : '🔷 '
+      : '') +
+      `*${guildData.callsign}* **${msg.author.username}#${msg.author.discriminator}**` +
       `${msg.content ? ' ' + msg.content : ''}${msg.attachments.length ? msg.attachments.reduce((a, attachment) => a + attachment.url, '\n') : ''}`
 
     if (content.length > 2000) return msg.channel.createMessage(alerts.lengthError(msg))
@@ -130,7 +137,7 @@ async function createRoom (db, name, pass, owner, channel) {
       id: owner.id,
       channel: channel.id,
       room: name,
-      abbreviation: abbreviate(owner.name)
+      callsign: abbreviate(owner.name)
     })
 }
 

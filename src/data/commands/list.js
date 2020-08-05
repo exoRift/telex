@@ -14,17 +14,17 @@ const data = {
       .where('id', msg.channel.guild.id)
 
     const guilds = await agent.attachments.db('guilds')
-      .select(['id', 'room', 'abbreviation'])
+      .select(['id', 'room', 'callsign'])
       .where('room', 'in', currentGuildSubquery)
 
     if (!guilds.length) return '`You are not currently in a room`'
 
-    const [room] = await agent.attachments.db('rooms')
+    const [roomData] = await agent.attachments.db('rooms')
       .select(['name', 'owner'])
       .where('name', guilds.find((g) => g.id === msg.channel.guild.id).room)
 
     return '```\n' +
-      guilds.reduce((a, g) => `${a}${(g.id === room.owner ? '👑 ' : '')}${agent.client.guilds.get(g.id).name} - ${g.abbreviation}\n`, '') +
+      guilds.reduce((a, g) => `${a}${(g.id === roomData.owner ? '👑 ' : '')}${agent.client.guilds.get(g.id).name} - ${g.callsign}\n`, '') +
       '```'
   }
 }

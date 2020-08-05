@@ -3,8 +3,9 @@ const {
 } = require('cyclone-engine')
 
 const {
-  emojis
-} = require('../utils/emojis.json')
+  emojis,
+  assets
+} = require('../util/')
 
 const data = {
   name: 'shards',
@@ -24,7 +25,7 @@ const data = {
       embed: {
         author: {
           name: 'Latencies',
-          icon_url: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Ping.png'
+          icon_url: assets.ping
         },
         color: latencyAverage > 200 && latencyAverage < 300 ? 16776960 : latencyAverage > 300 ? 15933733 : 111111,
         fields,

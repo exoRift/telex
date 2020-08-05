@@ -1,6 +1,9 @@
 const {
   Command
 } = require('cyclone-engine')
+const {
+  assets
+} = require('../util/')
 
 const data = {
   name: 'ping',
@@ -12,7 +15,7 @@ const data = {
       embed: {
         author: {
           name: 'Ping',
-          icon_url: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Ping.gif'
+          icon_url: assets.ping
         },
         title: 'Bot Status',
         description: `Pong! Client: **${clientLatency}ms** API: **${shard.latency}ms** | Servers: **${agent.client.guilds.filter((g) => g.shard.id === shard.id).length}**`,

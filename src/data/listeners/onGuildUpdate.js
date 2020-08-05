@@ -12,7 +12,7 @@ const {
 async function onGuildUpdate (db, guild, oldGuild) {
   if (guild.name !== oldGuild.name) {
     return db('guilds')
-      .update('abbreviation', routines.abbreviate(guild.name))
+      .update('callsign', routines.abbreviate(guild.name))
       .where('id', guild.id)
   }
 }

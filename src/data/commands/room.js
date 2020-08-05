@@ -14,8 +14,8 @@ const data = {
       .select('room')
       .where('id', msg.channel.guild.id)
       .then(async ([guildData]) => {
-        if (guildData) return agent.attachments.buildPanel(guildData.room, msg.channel.guild.id)
-        else return '`You are not currently in a room. Create one with the create command`'
+        if (guildData) return agent.attachments.buildPanel(agent.client, agent.attachments.db, guildData.room, msg.channel.guild.id)
+        else return '`You are not currently in a room. Create one with the create command or join an existing one`'
       })
   }
 }

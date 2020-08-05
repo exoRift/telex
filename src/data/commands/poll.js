@@ -122,7 +122,7 @@ const data = {
           buttons.push(new ReactCommand({
             emoji: '❌',
             action: ({ user }) => {
-              if (agent.getTopPermissionLevel(msg.channel.guild.members.get(user.id)) >= 1) closePoll()
+              if (agent.getTopPermissionLevel(msg.channel.guild.members.get(user.id)) > 0) closePoll()
             }
           }))
         }
@@ -133,7 +133,7 @@ const data = {
       }
 
       return 'Poll created!'
-    } else return '`You are not in a room`'
+    } else return '`You are not currently in a room`'
   }
 }
 

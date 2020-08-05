@@ -19,7 +19,9 @@ const privates = [
 ]
 
 const symbolRegex = /(\.|\\|\?)/g
-const evalRegex = new RegExp(`(${privates.reduce((a, p) => `${a}${a ? '|' : ''}${p.replace(symbolRegex, (match, capture) => '\\' + capture)}`, '')})`, 'g')
+const evalRegex = new RegExp(`(${privates.reduce((a, p = '') => `${a}${a
+  ? '|'
+  : ''}${p.replace(symbolRegex, (match, capture) => '\\' + capture)}`, '')})`, 'g')
 
 const data = {
   name: 'eval',

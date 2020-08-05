@@ -6,6 +6,9 @@
 
 ### **Important notes**
 - `startpoll` has been changed to `poll`
+- Rooms are now created with the `create` command
+- "Abbreviations" have been renamed to "Callsigns"
+- There are now badges in transmitted messages to define admins, server owners, and the room owner
 
 ### **Bug Fixes**
 - Unauthorized users can no longer close polls
