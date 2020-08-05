@@ -62,7 +62,7 @@ const agent = new Agent({
       permissions: permissionQuery
     },
     postEventFunctions: {
-      message: (msg, res) => onMessage.call(agent, msg, res)
+      message: (msg, res) => onMessage(agent.client, knex, msg, res)
     },
     statusMessage
   }
@@ -72,14 +72,14 @@ const dbl = new DBL(DBL_TOKEN)
 
 agent.attach('db', knex)
 agent.attach('dbl', dbl)
-for (const routine in routines) agent.attach(routine, routines[routine].bind(agent))
+for (const routine in routines) agent.attach(routine, routines[routine])
 
-agent.client.on('guildUpdate', onGuildUpdate.bind(agent))
-agent.client.on('guildDelete', onGuildDelete.bind(agent))
-agent.client.on('guildRoleUpdate', onChannelUnavailable.bind(agent))
-agent.client.on('guildRoleCreate', onChannelUnavailable.bind(agent))
-agent.client.on('guildRoleDelete', onChannelUnavailable.bind(agent))
-agent.client.on('channelUpdate', (channel) => onChannelUnavailable.call(agent, channel.guild))
-agent.client.on('channelDelete', (channel) => onChannelUnavailable.call(agent, channel.guild))
+agent.client.on('guildUpdate', (guild, oldGuild) => onGuildUpdate(knex, guild, oldGuild))
+agent.client.on('guildDelete', (guild) => onGuildDelete(agent.client, knex, guild))
+agent.client.on('guildRoleUpdate', (guild) => onChannelUnavailable(agent.client, knex, guild))
+agent.client.on('guildRoleCreate', (guild) => onChannelUnavailable(agent.client, knex, guild))
+agent.client.on('guildRoleDelete', (guild) => onChannelUnavailable(agent.client, knex, guild))
+agent.client.on('channelUpdate', (channel) => onChannelUnavailable(agent.client, channel.guild))
+agent.client.on('channelDelete', (channel) => onChannelUnavailable(agent.client, channel.guild))
 
-agent.connect().then(() => setTimeout(agent.attachments.initPrune, 10000))
+agent.connect().then(() => setTimeout(() => dbl.postStats(agent.client.guilds.size), 10000))

@@ -1,16 +1,21 @@
+const {
+  routines
+} = require('../util/')
+
 /**
  * Run on a message reception
  * @async
- * @this  {Agent}              The agent
- * @param {Eris.Message}   msg The message
- * @param {CommandResults} res The results of the command handler
+ * @param {Eris.Client}    client The Eris Client
+ * @param {Knex}           db     The Knex client
+ * @param {Eris.Message}   msg    The message
+ * @param {CommandResults} res    The results of the command handler
  */
-async function onMessage (msg, res) {
+async function onMessage (client, db, msg, res) {
   if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
-  else if ((msg.content || msg.attachments.length) && !msg.type && await this.attachments.isTransmissionChannel(msg)) {
-    return this.attachments.compileMessage(msg)
-      .then(this.attachments.transmit)
-      .catch((err) => this._handleError(err, msg))
+  else if ((msg.content || msg.attachments.length) && !msg.type && await routines.isTransmissionChannel(msg)) {
+    return routines.compileMessage(db, msg)
+      .then((response) => routines.transmit(client, db, response))
+      .catch((err) => console.error('Transmission failed:\n' + err))
   }
 }
 

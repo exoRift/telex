@@ -1,21 +1,26 @@
+const {
+  routines
+} = require('../util/')
+
 /**
  * Runs when a guild is deleted or the bot is kicked
  * @async
- * @this  {Agent}            The agent
- * @param {Eris.Guild} guild The guild
+ * @param {Eris.Client} client The Eris client
+ * @param {Knex}        db     The Knex client
+ * @param {Eris.Guild}  guild  The guild
  */
-async function onGuildDelete (guild) {
-  const [guildData] = await this.attachments.db('guilds')
+async function onGuildDelete (client, db, guild) {
+  const [guildData] = await db('guilds')
     .select('room')
     .where('id', guild.id)
 
   if (guildData) {
-    const [roomData] = await this.attachments.db('rooms')
+    const [roomData] = await db('rooms')
       .select('owner')
       .where('name', guildData.room)
 
-    if (guild.id === roomData.owner) return this.attachments.deleteRoom(guildData.room, guild.id)
-    else this.attachments.leaveRoom(guild.id)
+    if (guild.id === roomData.owner) return routines.deleteRoom(client, db, guildData.room, guild.id)
+    else routines.leaveRoom(client, db, guild.id)
   }
 }
 

@@ -8,8 +8,6 @@ const {
  * @param {Agent}    agent      The agent
  */
 function statusMessage (editStatus, agent) {
-  let pos = 0
-
   const statuses = [
     () => {
       agent.attachments.db('rooms')
@@ -24,13 +22,17 @@ function statusMessage (editStatus, agent) {
     })
   ]
 
-  function cycleStatus (override) {
-    statuses[pos](override !== undefined ? override : ++pos)
+  let pos = 0
+
+  function cycleStatus () {
+    statuses[pos]()
+
+    pos++
   }
 
   setInterval(cycleStatus, 300000)
 
-  cycleStatus(0)
+  cycleStatus()
 }
 
 module.exports = statusMessage

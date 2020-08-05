@@ -8,7 +8,7 @@ const alerts = require('./alerts/')
 const {
   onChannelUnavailable,
   onGuildDelete
-} = require('../../data/listeners/')
+} = require('../listeners/')
 
 /**
  * Abbreviate a name
@@ -22,25 +22,26 @@ function abbreviate (name) {
 /**
  * Build a room management panel
  * @async
- * @this    {Agent}                 The agent
- * @param   {String}          room  The name of the room
- * @param   {String}          guild The ID of the guild
- * @returns {Promise<Object>}       The message data containing the panel
+ * @param   {Eris.Client}     client The Eris client
+ * @param   {Knex}            db     The Knex client
+ * @param   {String}          room   The name of the room
+ * @param   {String}          guild  The ID of the guild
+ * @returns {Promise<Object>}        The message data containing the panel
  */
-async function buildPanel (room, guild) {
+async function buildPanel (client, db, room, guild) {
   const {
     owner,
     member
   } = require('../buttons')
 
-  const [roomData] = await this.attachments.db('rooms')
+  const [roomData] = await db('rooms')
     .select()
     .where('name', room)
-  const [guildData] = await this.attachments.db('guilds')
+  const [guildData] = await db('guilds')
     .select()
     .where('id', guild)
 
-  const guildObject = this.client.guilds.get(guild)
+  const guildObject = client.guilds.get(guild)
 
   const isOwner = guild === roomData.owner
   const buttons = isOwner ? owner : member
@@ -53,13 +54,13 @@ async function buildPanel (room, guild) {
       },
       title: `**${roomData.name}**`,
       thumbnail: {
-        url: this.client.guilds.get(roomData.owner).iconURL
+        url: client.guilds.get(roomData.owner).iconURL
       },
       color: isOwner ? 4980889 : undefined,
       fields: buttons.map((b) => {
         return {
           name: `${b.emoji} **${b.name}**`,
-          value: b.value ? b.value({ client: this.client, guild: guildObject, guildData, roomData }) : '​',
+          value: b.value ? b.value({ client: client, guild: guildObject, guildData, roomData }) : '​',
           inline: true
         }
       }),
@@ -82,19 +83,19 @@ async function buildPanel (room, guild) {
 /**
  * Compile Discord messages into content suitable for transmitting
  * @async
- * @this    {Agent}               The agent
+ * @param   {Knex}            db  The Knex client
  * @param   {Eris.Message}    msg The message to compile
  * @returns {Promise<Object>}     An object containing the transmission data
  */
-async function compileMessage (msg) {
+async function compileMessage (db, msg) {
   if (msg.channel.type) throw Error('Invalid channel.')
 
-  const [guildData] = this.attachments.db('guilds')
+  const [guildData] = db('guilds')
     .select(['channel', 'room', 'abbreviation'])
     .where('id', msg.channel.guild.id)
 
   if (guildData) {
-    const [roomData] = await this.attachments.db('rooms')
+    const [roomData] = await db('rooms')
       .select('owner')
       .where('name', guildData.room)
 
@@ -110,75 +111,79 @@ async function compileMessage (msg) {
 /**
  * Create a room
  * @async
- * @this  {Agent}                The agent
+ * @param {Knex}         db      The Knex client
  * @param {String}       name    The name of the room
  * @param {String}       pass    The password of the room
  * @param {Eris.Guild}   owner   The owner of the room
  * @param {Eris.Channel} channel The transmission channel of the owner
  */
-async function createRoom (name, pass, owner, channel) {
-  await this.attachments.db('rooms')
+async function createRoom (db, name, pass, owner, channel) {
+  await db('rooms')
     .insert({
       name,
       pass,
       owner: owner.id
     })
 
-  await this.attachments.db('guilds')
+  await db('guilds')
     .insert({
       id: owner.id,
       channel: channel.id,
       room: name,
-      abbreviation: this.attachments.abbreviate(owner.name)
+      abbreviation: abbreviate(owner.name)
     })
 }
 
 /**
  * Completely delete a room from all tables
  * @async
- * @this  {Agent}          The agent
- * @param {String} room    The name of the room to delete
- * @param {String} exclude The ID of a guild that is excluded from the announcement
+ * @param {Eris.Client} client  The Eris client
+ * @param {Knex}        db      The Knex client
+ * @param {String}      room    The name of the room to delete
+ * @param {String}      exclude The ID of a guild that is excluded from the announcement
  */
-function deleteRoom (room, exclude) {
-  return this.attachments.transmit({ room, msg: alerts.deleteRoom({ roomName: room }), exclude })
-    .then(() => this.attachments.db('rooms')
+function deleteRoom (client, db, room, exclude) {
+  return transmit(client, db, { room, msg: alerts.deleteRoom({ roomName: room }), exclude })
+    .then(() => db('rooms')
       .delete()
       .where('name', room))
-    .then(() => this.attachments.db('guilds')
+    .then(() => db('guilds')
       .delete()
       .where('room', room))
 }
 
 /**
  * Get a valid channel that can be used for a transmission channel
- * @this    {Agent}                            The agent
- * @param   {Eris.Guild}                 guild The guild to check
- * @param   {Eris.TextChannel}           prio  The inital channel to priortitize if possible
- * @returns {Eris.TextChannel|undefined}       A valid channel
+ * @param   {Eris.Client}                client The Eris client
+ * @param   {Eris.Guild}                 guild  The guild to check
+ * @param   {Eris.TextChannel}           prio   The inital channel to priortitize if possible
+ * @returns {Eris.TextChannel|undefined}        A valid channel
  */
-function getValidChannel (guild, prio) {
-  return prio && isValidChannel(this.client, prio)
+function getValidChannel (client, guild, prio) {
+  return prio && isValidChannel(client, prio)
     ? prio
-    : guild.channels.find((c) => isValidChannel(this.client, c))
+    : guild.channels.find((c) => isValidChannel(client, c)) || null
 }
 
-function pruneDB () {
-  this.attachments.dbl.postStats(this.client.guilds.size)
-
-  console.log('Initiating Prune')
-
-  this.attachments.db('guilds')
+/**
+ * Prune the database from guilds that are no longer available
+ * @param   {Eris.Client}  client The Eris client
+ * @param   {Knex}         db     The Knex client
+ * @param   {Eris.Guild[]} guilds The guilds the bot is in
+ * @returns {Promise}
+ */
+function pruneDB (client, db, guilds) {
+  return db('guilds')
     .select(['id', 'channel'])
     .then((res) => {
       for (const guildData of res) {
-        const guild = this.client.guilds.get(guildData.id)
+        const guild = guilds.find((g) => g.id === guildData.id)
 
-        if (guild) onChannelUnavailable.call(this, guild) // Check if channel unavailable
+        if (guild) onChannelUnavailable(guild) // Check if channel unavailable
         else {
           guildData.name = 'deleted-guild'
 
-          onGuildDelete.call(this, guildData)
+          onGuildDelete(guildData)
         }
       }
     })
@@ -186,7 +191,7 @@ function pruneDB () {
 
 /**
  * Check if the client possesses read and write permissions in a channel
- * @param   {Eris.Client}  client  The client
+ * @param   {Eris.Client}  client  The Eris client
  * @param   {Eris.Channel} channel The channel
  * @returns {Boolean}              Whether the client possesses the proper permissions or not
  */
@@ -197,34 +202,36 @@ function isValidChannel (client, channel) {
 /**
  * Make a guild leave its room
  * @async
- * @this  {Agent}        The agent
- * @param {String} guild The guild to make leave its room
+ * @param {Eris.Client} client The Eris client
+ * @param {Knex}        db     The knex client
+ * @param {String}      guild  The guild to make leave its room
  */
-async function leaveRoom (guild) {
-  const [guildData] = this.attachments.db('guilds')
+async function leaveRoom (client, db, guild) {
+  const [guildData] = db('guilds')
     .select('room')
     .where('id', guild)
 
   if (guildData) {
-    return this.attachments.db('guilds')
+    return db('guilds')
       .delete()
       .where('id', guild.id)
-      .then(() => this.transmit({ room: guildData.room, msg: alerts.leave({ guildName: guild.name }) }))
+      .then(() => transmit(client, db, { room: guildData.room, msg: alerts.leave({ guildName: guild.name }) }))
   } else throw Error('Guild is not in a room')
 }
 
 /**
  * Transmit a message across guilds in a room
  * @async
- * @this    {Agent}                                      The agent
+ * @param   {Eris.Client}              client            The Eris client
+ * @param   {Knex}                     db                The Knex client
  * @param   {Object}                   data              The data
  * @prop    {String}                   data.room         The room to transmit the message to
  * @prop    {Object}                   data.msg          The message to transmit
  * @prop    {String}                   [data.exclude=''] The ID of the guild to exclude from the transmission
  * @returns {Promise<Eris.Message[]>}                    An array of all messages sent
  */
-async function transmit ({ room, msg, exclude = '' }) {
-  const channels = await this.attachments.db('guilds')
+async function transmit (client, db, { room, msg, exclude = '' }) {
+  const channels = await db('guilds')
     .select('channel')
     .where('room', room)
     .whereNot('id', exclude)
@@ -232,7 +239,7 @@ async function transmit ({ room, msg, exclude = '' }) {
   if (channels.length) {
     const promises = []
 
-    for (const { channel } of channels) promises.push(this.client.createMessage(channel, msg))
+    for (const { channel } of channels) promises.push(client.createMessage(channel, msg))
 
     return Promise.all(promises)
   } else throw Error('No channels to transmit')

@@ -5,6 +5,7 @@
   "main": "bot.js",
   "scripts": {
     "start": "node ./",
+    "prunedb": "node ./src/workers/prune.js",
     "lint": "eslint ./"
   },
   "author": "exoRift",
