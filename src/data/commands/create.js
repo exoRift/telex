@@ -2,10 +2,6 @@ const {
   Command
 } = require('cyclone-engine')
 
-const {
-  routines
-} = require('../util/')
-
 const data = {
   name: 'create',
   desc: 'Create a room you can manage and add other guilds to',
@@ -22,7 +18,7 @@ const data = {
     }
   },
   action: async ({ agent, msg, args: [name, pass = '1234'] }) => {
-    await msg.delete()
+    await msg.delete().catch((ignore) => ignore)
 
     const [guildData] = await agent.attachments.db('guilds')
       .select('room')
@@ -30,7 +26,7 @@ const data = {
 
     if (guildData) return `\`You are already in the room: ${guildData.room}\``
 
-    return routines.createRoom(name, pass, msg.channel.guild.id)
+    return agent.attachments.routines.createRoom(name, pass, msg.channel.guild.id)
       .then(() => 'Successfully created a room! Time to add some guilds to it')
       .catch(() => '`A room with that name already exists`')
   }
