@@ -12,7 +12,14 @@ const data = {
   options: {
     args: [{ name: 'guild', mand: true }],
     guildOnly: true,
-    authLevel: 1
+    authLevel: 1,
+    guide: {
+      color: 11037490,
+      value: [{
+        name: 'Punish the troublemakers',
+        value: 'Don\'t like a certain guild anymore? Kick them from your room with this command'
+      }]
+    }
   },
   action: async ({ agent, msg, args: [guildName] }) => {
     const target = agent.client.guilds.find((g) => g.name.toLowerCase() === guildName.toLowerCase())

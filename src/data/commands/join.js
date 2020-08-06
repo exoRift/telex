@@ -14,7 +14,14 @@ const data = {
   options: {
     args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }],
     guildOnly: true,
-    authLevel: 1
+    authLevel: 1,
+    guide: {
+      color: 65280,
+      fields: [{
+        name: 'Join a room someone has created',
+        value: 'If your friend has created a room and has given you its name and password, good news! You can join in\nSimply enter a room\'s name and password separated by a bar (`|`) to join a room\nNow you can send messages across a room to all the guilds in it'
+      }]
+    }
   },
   action: async ({ agent, msg, args: [name, pass] }) => {
     await msg.delete()

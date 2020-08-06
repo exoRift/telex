@@ -12,7 +12,14 @@ const data = {
   options: {
     args: [{ name: 'announcement', mand: true }],
     guildOnly: true,
-    authLevel: 1
+    authLevel: 1,
+    guide: {
+      color: 3381759,
+      fields: [{
+        name: 'Room-wide announcement',
+        value: 'Send an easily discernible announcement to the transmission channel of all guilds in the room'
+      }]
+    }
   },
   action: async ({ agent, msg, args: [announcement] }) => {
     await msg.delete()

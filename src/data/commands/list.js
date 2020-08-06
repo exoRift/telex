@@ -6,7 +6,14 @@ const data = {
   name: 'list',
   desc: 'List all the guilds in your room and their abbreviations',
   options: {
-    guildOnly: true
+    guildOnly: true,
+    guide: {
+      color: 2303520,
+      fields: [{
+        name: 'See who\'s in your room',
+        value: 'Lost track of which guilds are in your cool kidz corner? Don\'t know which guild a callsign belongs to?\nList the names and callsigns of the guilds in the room you\'re in\nThe guild that owns the room will have a crown'
+      }]
+    }
   },
   action: async ({ agent, msg }) => {
     const currentGuildSubquery = agent.attachments.db('guilds')

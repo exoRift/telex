@@ -15,7 +15,14 @@ const data = {
   options: {
     args: [{ name: 'guild', mand: true }],
     guildOnly: true,
-    authLevel: 1
+    authLevel: 1,
+    guide: [{
+      color: 2600252,
+      fields: [{
+        name: 'Joining a room without its password',
+        value: 'If you are unable or unwilling to give a guild owner your room password but want them to join your room, you can use this command to send an invite to their guild (as long as the bot is in it) which the owner can accept to join the room without needing its password'
+      }]
+    }]
   },
   action: async ({ agent, msg, args: [guild] }) => {
     const target = agent.client.guilds.find((g) => g.name.toLowerCase() === guild.toLowerCase())
