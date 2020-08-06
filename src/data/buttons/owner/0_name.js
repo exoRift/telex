@@ -3,8 +3,8 @@ const {
 } = require('cyclone-engine')
 
 const {
-  rename
-} = require('../../utils/alerts/')
+  alerts
+} = require('../../util/')
 
 const data = {
   name: 'Name',
@@ -19,33 +19,34 @@ const data = {
             timeout: 10000,
             args: [{ name: 'name', mand: true }]
           },
-          action: ({ agent, msg: response, args: [name], triggerResponse }) => {
-            triggerResponse.delete().catch((ignore) => ignore)
+          action: async ({ agent, msg: response, args: [name], triggerResponse }) => {
+            await triggerResponse.delete().catch((ignore) => ignore)
 
-            return agent.attachments.db('rooms')
+            const [existing] = await agent.attachments.db('rooms')
               .select('name')
               .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
-              .then(([existing]) => {
-                if (existing) return '`Room name taken.`'
-                else return agent.attachments.db('rooms')
-                  .select('name')
-                  .where('owner', msg.channel.guild.id)
-                  .then(([room]) => agent.attachments.db('rooms')
-                    .update('name', name)
-                    .where('name', room.name)
-                    .then(() => agent.attachments.db('guilds')
-                      .update('room', name)
-                      .where('room', room.name))
-                    .then(async () => {
-                      agent.attachments.transmit({ room: name, msg: rename({ oldName: room.name, newName: name }) })
-    
-                      msg.edit(await agent.attachments.buildPanel(name, msg.channel.guild.id)).catch((ignore) => ignore)
-    
-                      response.delete().catch((ignore) => ignore)
-    
-                      return `Successfully changed room name from \`${room.name}\` to \`${name}\``
-                    }))
-              })
+
+            if (existing) return '`Room name taken`'
+
+            const [roomData] = await agent.attachments.db('rooms')
+              .select('name')
+              .where('owner', msg.channel.guild.id)
+
+            await agent.attachments.db('rooms')
+              .update('name', name)
+              .where('name', roomData.name)
+
+            await agent.attachments.db('guilds')
+              .update('room', name)
+              .where('room', roomData.name)
+
+            await agent.attachments.transmit(agent.client, agent.attachments.db, { room: name, msg: alerts.rename({ oldName: roomData.name, newName: name }) })
+
+            await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, name, msg.channel.guild.id)).catch((ignore) => ignore)
+
+            await response.delete().catch((ignore) => ignore)
+
+            return `Successfully changed room name from **${roomData.name}** to **${name}**`
           }
         })
       }

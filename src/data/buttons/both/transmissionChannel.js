@@ -26,9 +26,9 @@ const data = {
                   .select('room')
                   .where('id', msg.channel.guild.id))
                 .then(async ([guildData]) => {
-                  response.delete().catch((ignore) => ignore)
+                  await response.delete().catch((ignore) => ignore)
 
-                  msg.edit(await agent.attachments.buildPanel(guildData.room, msg.channel.guild.id)).catch((ignore) => ignore)
+                  await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, guildData.room, msg.channel.guild.id)).catch((ignore) => ignore)
                 })
             } else return `\`The bot does not have permission to send/receive messages in ${channel.name}\``
           }
