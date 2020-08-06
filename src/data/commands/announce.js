@@ -14,7 +14,7 @@ const data = {
     guildOnly: true,
     authLevel: 1
   },
-  action: async ({ agent, msg, args: [announcement], triggerResponse }) => {
+  action: async ({ agent, msg, args: [announcement] }) => {
     await msg.delete()
 
     const [guildData] = await agent.attachments.db('guilds')

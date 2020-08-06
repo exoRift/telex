@@ -11,6 +11,7 @@
 - There are now badges in transmitted messages to define admins, server owners, and the room owner
 - Renamed "Management Role" to "Admin Role"
 - The announce button has been turned into a command
+- The kick button has been turned into a command
 
 ### **Bug Fixes**
 - Unauthorized users can no longer close polls
