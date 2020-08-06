@@ -24,17 +24,26 @@ const data = {
               if (char.charCodeAt() < 33 || char.charCodeAt() > 126) return '`Callsign contains an invalid character`'
             }
 
+            const [guildData] = await agent.attachments.db('guilds')
+              .select('room')
+              .where('id', msg.channel.guild.id)
+
+            const [existing] = await agent.attachments.db('guilds')
+              .select('id')
+              .where({
+                room: guildData.room,
+                callsign
+              })
+
+            if (existing) return `\`${agent.client.guilds.get(existing.id).name} has already taken that callsign\``
+
             await agent.attachments.db('guilds')
               .update('callsign', callsign)
               .where('id', msg.channel.guild.id)
-              .then(() => agent.attachments.db('guilds')
-                .select('room')
-                .where('id', msg.channel.guild.id))
-              .then(async ([guildData]) => {
-                await response.delete().catch((ignore) => ignore)
 
-                await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, guildData.room, msg.channel.guild.id)).catch((ignore) => ignore)
-              })
+            await response.delete().catch((ignore) => ignore)
+
+            await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, guildData.room, msg.channel.guild.id)).catch((ignore) => ignore)
           }
         })
       }
