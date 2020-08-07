@@ -77,7 +77,9 @@ const data = {
         } else {
           const channel = agent.attachments.getValidChannel(msg.channel.guild, msg.channel)
 
-          if (channel) agent.attachments.joinRoom(agent.client, agent.attachments.db, msg.channel.guild, channel, roomData.name, guilds.filter((g) => g.room === roomData.name).length)
+          if (channel) await agent.attachments.joinRoom(agent.client, agent.attachments.db, msg.channel.guild, channel, roomData.name, guilds.filter((g) => g.room === roomData.name).length)
+
+          return `Successfully joined **${roomData.name}**`
         }
       } else return '`Incorrect password`'
     } else return `\`Could not find a room named "${name}"\``

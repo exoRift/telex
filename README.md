@@ -10,11 +10,10 @@ Once the bot has joined a room, simply type in the assigned channel to transmit 
 
 [![Discord Bot List Widget](https://discordbots.org/api/widget/462036425710501888.png?topcolor=4d83ff&middlecolor=004dff&usernamecolor=000000&certifiedcolor=0d94ba&datacolor=ffffff&labelcolor=4d83ff&highlightcolor=000000)](https://discordbots.org/bot/462036425710501888)
 
-## Type `|room` to create a room and get started!
+## Create or join a room and get started!
 
 ### Features included:
-- Inviting servers
-- Joining rooms
-- Joined-server Management
-- Announcements
+- Creating and joining rooms
+- Managing your room
+- Inter-server announcements
 - Inter-server polling

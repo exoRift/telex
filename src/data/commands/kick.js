@@ -46,6 +46,8 @@ const data = {
               .delete()
               .where('id', target.id)
 
+            console.log(`KICK: ${target.id} was kicked from \`${guildData.room}\``)
+
             return target.name + ' was kicked from your room'
           } else return `\`${target.name} is not in your room\``
         } else return `\`You do not own ${guildData.room}\``

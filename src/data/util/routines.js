@@ -145,6 +145,8 @@ async function createRoom (db, name, pass, owner, channel) {
       room: name,
       callsign: abbreviate(owner.name)
     })
+
+  console.log(`CREATION: ${owner.id} created the room \`${name}\``)
 }
 
 /**
@@ -163,6 +165,7 @@ function deleteRoom (client, db, room, exclude) {
     .then(() => db('guilds')
       .delete()
       .where('room', room))
+    .then(() => console.log(`DELETION: \`${room}\` was deleted`))
 }
 
 /**
@@ -233,7 +236,7 @@ function joinRoom (client, db, guild, channel, room, guildCount = 0) {
       room: room.name,
       msg: alerts.join({ guildName: guild.name, guildsInRoom: guildCount })
     }))
-    .then(() => `Successfully joined **${room.name}**`)
+    .then(() => console(`JOIN: ${guild.id} joined \`${room}\``))
 }
 
 /**
@@ -241,7 +244,7 @@ function joinRoom (client, db, guild, channel, room, guildCount = 0) {
  * @async
  * @param {Eris.Client} client The Eris client
  * @param {Knex}        db     The knex client
- * @param {String}      guild  The guild to make leave its room
+ * @param {String}      guild  The ID of the guild to make leave its room
  */
 async function leaveRoom (client, db, guild) {
   const [guildData] = db('guilds')
@@ -253,6 +256,7 @@ async function leaveRoom (client, db, guild) {
       .delete()
       .where('id', guild.id)
       .then(() => transmit(client, db, { room: guildData.room, msg: alerts.leave({ guildName: guild.name }) }))
+      .then(() => console.log(`LEAVE: ${guild} left \`${guildData.room}\``))
   } else throw Error('Guild is not in a room')
 }
 
