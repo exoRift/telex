@@ -9,7 +9,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: {
-      color: 161724,
+      color: 0x277BC,
       fields: [{
         name: 'Room management',
         value: 'Manage your guild settings or the room settings if you own it\n\nTransmission Channel: The channel where messages are exchanged between your guild and the rest of the room\nAdmin Role: Anyone with this roll can open and use the management panel\nCallsign: An abbreviation displayed next to the transmitted messages of your guild members that identifies where they\'re speaking from'

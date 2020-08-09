@@ -56,7 +56,7 @@ async function buildPanel (client, db, room, guild) {
       thumbnail: {
         url: client.guilds.get(roomData.owner).iconURL
       },
-      color: isOwner ? 4980889 : undefined,
+      color: isOwner ? 0x4C0099 : undefined,
       fields: buttons.map((b) => {
         return {
           name: `${b.emoji} **${b.name}**`,

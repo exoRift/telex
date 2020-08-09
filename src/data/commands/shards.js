@@ -27,7 +27,7 @@ const data = {
           name: 'Latencies',
           icon_url: assets.ping
         },
-        color: latencyAverage > 200 && latencyAverage < 300 ? 16776960 : latencyAverage > 300 ? 15933733 : 111111,
+        color: latencyAverage > 200 && latencyAverage < 300 ? 0xFFFF00 : latencyAverage > 300 ? 0xF32125 : 0x1B207,
         fields,
         footer: {
           text: `Average ping is ${latencyAverage}ms`

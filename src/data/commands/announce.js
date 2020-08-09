@@ -14,7 +14,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: {
-      color: 3381759,
+      color: 0x3399FF,
       fields: [{
         name: 'Room-wide announcement',
         value: 'Send an easily discernible announcement to the transmission channel of all guilds in the room'

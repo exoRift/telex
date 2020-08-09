@@ -19,7 +19,7 @@ const data = {
         },
         title: 'Bot Status',
         description: `Pong! Client: **${clientLatency}ms** API: **${shard.latency}ms** | Servers: **${agent.client.guilds.filter((g) => g.shard.id === shard.id).length}**`,
-        color: clientLatency > 200 && clientLatency < 300 ? 16776960 : clientLatency > 300 ? 15933733 : 111111
+        color: clientLatency > 200 && clientLatency < 300 ? 0xFFFF00 : clientLatency > 300 ? 0xF32125 : 0x1B207
       }
     }
   }

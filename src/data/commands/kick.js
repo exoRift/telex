@@ -14,7 +14,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: {
-      color: 11037490,
+      color: 0xA86B32,
       value: [{
         name: 'Punish the troublemakers',
         value: 'Don\'t like a certain guild anymore? Kick them from your room with this command'

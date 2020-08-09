@@ -19,7 +19,7 @@ function pickMenu (agent, page = 1) {
     const helpMenuData = {
       desc: `${agent.client.user.username} is a bot allows you to set up rooms that servers can connect to and chat across all connected servers. Click [here](https://discordbots.org/bot/${agent.client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,
       serverCode: SUPPORT_SERVER,
-      color: 33023,
+      color: 0x80FF,
       footerImage: 'https://raw.githubusercontent.com/exoRift/telex/master/assets/Prefix.png',
       version: pkg.version
     }

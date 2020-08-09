@@ -5,7 +5,7 @@ module.exports = ({ guildName, guildsInRoom }) => {
       description: guildsInRoom >= 3
         ? 'ATTENTION: The recommended number of guilds per room is 3. The more guilds you have, the slower messages will pass through due to ratelimiting.'
         : '',
-      color: 65280
+      color: 0xFF00
     }
   }
 }

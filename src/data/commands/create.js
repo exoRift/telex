@@ -10,7 +10,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: {
-      color: 65280,
+      color: 0xFF00,
       fields: [{
         name: 'Room Creation',
         value: 'Create a room\nUnless supplied to the command, the password is `1234` by default\nInvite other guilds with the `invite` command or give them the password and let them use the `join` command'

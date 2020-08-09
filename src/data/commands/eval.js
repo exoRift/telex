@@ -53,7 +53,7 @@ const data = {
           icon_url: msg.author.avatarURL
         },
         title: `Time taken: **${stopTime - startTime}** milliseconds`,
-        color: result instanceof Error ? 16711680 : 65280,
+        color: result instanceof Error ? 0xFF0000 : 0xFF00,
         fields: [
           {
             name: 'Input',

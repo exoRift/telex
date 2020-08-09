@@ -2,7 +2,7 @@ module.exports = ({ roomName }) => {
   return {
     embed: {
       title: `**${roomName}** has been deleted by the owner.`,
-      color: 16711680
+      color: 0xFF0000
     }
   }
 }

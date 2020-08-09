@@ -7,7 +7,7 @@ module.exports = ({ msg }) => {
         url: `https://discord.com/channels/${msg.channel.guilds.id}/${msg.channel.id}/${msg.id}`
       },
       title: 'Message is too long to pass through.',
-      color: 16777010
+      color: 0xFFFF32
     }
   }
 }

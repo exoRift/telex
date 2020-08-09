@@ -17,7 +17,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: [{
-      color: 2600252,
+      color: 0x27AD3C,
       fields: [{
         name: 'Joining a room without its password',
         value: 'If you are unable or unwilling to give a guild owner your room password but want them to join your room, you can use this command to send an invite to their guild (as long as the bot is in it) which the owner can accept to join the room without needing its password'
@@ -84,7 +84,7 @@ const data = {
                   thumbnail: {
                     url: assets.invite
                   },
-                  color: 2600252,
+                  color: 0x27AD3C,
                   footer: {
                     text: 'To redirect invite recieving, remove the ability for the bot to talk in this channel.'
                   }

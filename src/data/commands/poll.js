@@ -20,7 +20,7 @@ const data = {
     guildOnly: true,
     authLevel: 1,
     guide: {
-      color: 7829503,
+      color: 0x7777FF,
       fields: [{
         name: 'Polling across multiple servers',
         value: 'Provide the name of the poll and the choices\nThe name is separated from the choices with a bar (`|`)\nChoices are separated by spaces\nPolls last for an hour or until they\'re manually closed'
@@ -54,7 +54,7 @@ const data = {
           },
           title: `**${name}**`,
           description: `Poll from: __${msg.channel.guild.name}__`,
-          color: 16776960,
+          color: 0xFFFF00,
           fields: choices.map(buildField.bind(this, poll.choices)),
           footer: {
             text: `Initiated by: ${msg.author.username}`
@@ -96,7 +96,7 @@ const data = {
               },
               title: '**The results are in!**',
               description: `**${name}**`,
-              color: 65535,
+              color: 0xFFFF,
               fields: choices.map(buildField.bind(this, poll.choices)),
               footer: {
                 text: `Initiated by: ${msg.author.username}`
