@@ -1,4 +1,3 @@
-
 exports.up = function (knex) {
   return knex.schema
     .createTable('rooms', (table) => {
@@ -11,7 +10,7 @@ exports.up = function (knex) {
       table.string('channel', 255).notNullable()
       table.foreign('room').references('rooms.name')
       table.string('adminrole', 255).nullable()
-      table.string('callsign', 5)
+      table.string('callsign', 5).notNullable()
     })
 }
 
