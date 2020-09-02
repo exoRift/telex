@@ -5,6 +5,7 @@ const {
 } = require('cyclone-engine')
 const DBL = require('dblapi.js')
 
+const knexConfig = require('./knexfile.js')
 const commands = require('./src/data/commands/')
 
 const {
@@ -21,19 +22,11 @@ const {
 
 const {
   TOKEN,
-  DATABASE_URL,
   DBL_TOKEN,
   PREFIX
 } = process.env
 
-const knex = new Knex({
-  client: 'pg',
-  connection: DATABASE_URL,
-  pool: {
-    min: 1,
-    max: 1
-  }
-})
+const knex = new Knex(knexConfig)
 
 const permissionQuery = knex('guilds')
   .select('id', 'adminrole')
