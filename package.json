@@ -1,6 +1,6 @@
 {
   "name": "telex",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Allow communication between Discord servers by creating rooms you can invite other servers to. All messages sent in the designated channel will be echoed throughout all servers in the room",
   "main": "bot.js",
   "scripts": {
