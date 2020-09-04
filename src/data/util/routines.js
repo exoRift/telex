@@ -5,11 +5,6 @@ const {
 
 const alerts = require('./alerts/')
 
-const {
-  onChannelUnavailable,
-  onGuildDelete
-} = require('../listeners/')
-
 /**
  * Abbreviate a name
  * @param   {String} name The name to abbreviate
@@ -182,27 +177,16 @@ function getValidChannel (client, guild, prio) {
 }
 
 /**
- * Prune the database from guilds that are no longer available
- * @param   {Eris.Client}  client The Eris client
- * @param   {Knex}         db     The Knex client
- * @param   {Eris.Guild[]} guilds The guilds the bot is in
- * @returns {Promise}
+ * Check if a channel is a transmission channel
+ * @param  {Knex}             db      The Knex client
+ * @param  {Eris.TextChannel} channel The channel
+ * @return {Promise<Boolean>}         Whether the channel is a transmission channel or not
  */
-function pruneDB (client, db, guilds) {
+function isTransmissionChannel (db, channel) {
   return db('guilds')
-    .select(['id', 'channel'])
-    .then((res) => {
-      for (const guildData of res) {
-        const guild = guilds.find((g) => g.id === guildData.id)
-
-        if (guild) onChannelUnavailable(guild) // Check if channel unavailable
-        else {
-          guildData.name = 'deleted-guild'
-
-          onGuildDelete(guildData)
-        }
-      }
-    })
+    .select('id')
+    .where('channel', channel.id)
+    .then(([guildData]) => Boolean(guildData))
 }
 
 /**
@@ -293,7 +277,6 @@ module.exports = {
   createRoom,
   deleteRoom,
   getValidChannel,
-  pruneDB,
   isValidChannel,
   joinRoom,
   leaveRoom,
