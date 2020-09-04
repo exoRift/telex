@@ -54,18 +54,18 @@ const data = {
           if (channel) {
             const buttons = [
               new ReactCommand({
-                emoji: ':RedTick:457860110056947712',
-                action: () => {
-                  agent.attachments.transmit(agent.client, agent.attachments.db, { room: guildData.room, msg: alerts.inviteDecline({ guildName: target.name }) })
-                    .then(() => '`Invite Declined`')
-                }
-              }),
-              new ReactCommand({
                 emoji: '✅',
                 action: () => {
                   agent.attachments.joinRoom(agent.client, agent.attachments.db, target, channel, guildData.room, guilds.length)
                     .then(() => `Successfully joined **${guildData.room}**`)
                     .catch(() => '`An error occurred. You might already be in a room`')
+                }
+              }),
+              new ReactCommand({
+                emoji: ':RedTick:457860110056947712',
+                action: () => {
+                  agent.attachments.transmit(agent.client, agent.attachments.db, { room: guildData.room, msg: alerts.inviteDecline({ guildName: target.name }) })
+                    .then(() => '`Invite Declined`')
                 }
               })
             ]

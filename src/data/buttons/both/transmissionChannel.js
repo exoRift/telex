@@ -18,7 +18,7 @@ const data = {
           action: async ({ agent, msg: response, args: [channel], triggerResponse }) => {
             await triggerResponse.delete().catch((ignore) => ignore)
 
-            if (agent.attachments.isValidChannel(channel)) {
+            if (agent.attachments.isValidChannel(agent.client, channel)) {
               await agent.attachments.db('guilds')
                 .update('channel', channel.id)
                 .where('id', msg.channel.guild.id)

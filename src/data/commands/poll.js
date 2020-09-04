@@ -62,7 +62,7 @@ const data = {
         }
       }
 
-      const responses = await agent.attachments.transmit({ room: guildData.room, msg: menu })
+      const responses = await agent.attachments.transmit(agent.client, agent.attachments.db, { room: guildData.room, msg: menu })
 
       const refresh = setInterval(() => {
         for (const response of responses) {
@@ -86,7 +86,7 @@ const data = {
           agent.reactionHandler.detachInterface(response, false)
         }
 
-        agent.attachments.transmit({
+        agent.attachments.transmit(agent.client, agent.attachments.db, {
           room: guildData.room,
           msg: {
             embed: {
