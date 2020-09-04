@@ -25,10 +25,12 @@ const data = {
     const target = agent.client.guilds.find((g) => g.name.toLowerCase() === guildName.toLowerCase())
 
     if (target) {
+      if (target.id === msg.channel.guild.id) return '`You can\'t kick yourself`'
+
       const guilds = await agent.attachments.db('guilds')
-        .select('room')
+        .select(['id', 'room'])
         .where('id', msg.channel.guild.id)
-        .andWhere('id', target.id)
+        .orWhere('id', target.id)
 
       const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
       const targetData = guilds.find((g) => g.id === target.id)
