@@ -7,14 +7,13 @@ const data = {
   value: ({ roomData }) => '•'.repeat(roomData.pass.length),
   emoji: '🔐',
   action: async ({ agent, msg, user }) => {
-    const channel = await user.user.getDMChannel()
+    const channel = await user.getDMChannel()
 
     const [roomData] = await agent.attachments.db('rooms')
       .select(['name', 'pass'])
       .where('owner', msg.channel.guild.id)
 
     return channel.createMessage(`The current password to **${roomData.name}** is \`${roomData.pass}\`. Type a new password for your room (Cancels after 10 seconds):`)
-      .catch(() => `\`${user.username} has DMs turned off and cannot be messaged password details\``)
       .then(() => {
         return {
           content: `**${user.username}** has been DM'd details to change the password`,
@@ -37,6 +36,7 @@ const data = {
           }
         }
       })
+      .catch(() => `\`${user.username} has DMs turned off and cannot be messaged password details\``)
   }
 }
 
