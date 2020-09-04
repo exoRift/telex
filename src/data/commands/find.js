@@ -2,7 +2,9 @@ const {
   Command
 } = require('cyclone-engine')
 
-const statuses = require('../util/emojis.json')
+const {
+  emojis: statuses
+} = require('../util/')
 
 const data = {
   name: 'find',
@@ -30,7 +32,7 @@ const data = {
               name: user.id,
               icon_url: user.avatarURL
             },
-            title: `Status: ${statuses[user.game && user.game.type === 1 ? 'streaming' : user.status]}`,
+            title: `Status: ${statuses[(user.game && user.game.type === 1) ? 'streaming' : user.status]}`,
             description: `\\<@${user.id}> to mention the user`,
             color: 0x6200EE
           }

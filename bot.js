@@ -51,6 +51,7 @@ const agent = new Agent({
     }
   },
   options: {
+    intents: ['guildPresences'],
     guildOptions: {
       permissions: permissionQuery
     },
