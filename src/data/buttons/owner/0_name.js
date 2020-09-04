@@ -24,7 +24,7 @@ const data = {
 
             const [existing] = await agent.attachments.db('rooms')
               .select('name')
-              .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
+              .whereRaw('LOWER(name) = ?', name.toLowerCase())
 
             if (existing) return '`Room name taken`'
 

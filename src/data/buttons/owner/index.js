@@ -1,5 +1,3 @@
-const {
-  requireDirToArray
-} = require('../../utils')
+const massRequire = require('../../util/mass-require.js')
 
-module.exports = requireDirToArray(__dirname)
+module.exports = massRequire.toArray(__dirname)

@@ -12,7 +12,7 @@ const {
  */
 async function onMessage (client, db, msg, res) {
   if (res && res.command) console.log(`${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
-  else if ((msg.content || msg.attachments.length) && !msg.type && await routines.isTransmissionChannel(msg)) {
+  else if ((msg.content || msg.attachments.length) && !msg.type && await routines.isTransmissionChannel(db, msg.channel)) {
     return routines.compileMessage(db, msg)
       .then((response) => routines.transmit(client, db, response))
       .catch((err) => console.error('Transmission failed:\n' + err))

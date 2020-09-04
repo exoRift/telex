@@ -28,7 +28,7 @@ const data = {
 
     const [roomData] = await agent.attachments.db('rooms')
       .select(['name', 'pass'])
-      .where(agent.attachments.db.raw('LOWER(name) = ?', name.toLowerCase()))
+      .whereRaw('LOWER(name) = ?', name.toLowerCase())
 
     if (roomData) {
       if (pass === roomData.pass) {
@@ -75,7 +75,7 @@ const data = {
             }
           }
         } else {
-          const channel = agent.attachments.getValidChannel(msg.channel.guild, msg.channel)
+          const channel = agent.attachments.getValidChannel(agent.client, msg.channel.guild, msg.channel)
 
           if (channel) await agent.attachments.joinRoom(agent.client, agent.attachments.db, msg.channel.guild, channel, roomData.name, guilds.filter((g) => g.room === roomData.name).length)
 

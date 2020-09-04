@@ -1,23 +1,19 @@
-const {
-  readdirSync
-} = require('fs')
-const {
-  join
-} = require('path')
+const fs = require('fs')
+const path = require('path')
 
 const filenameRegex = /(.+?)\.js$/
 
 /**
  * Require every js file in a directory and push them to an array
- * @param   {String} path The directory to read
- * @returns {*[]}         The resulting array
+ * @param   {String} dir The directory to read
+ * @returns {*[]}        The resulting array
  */
-function toArray (path) {
+function toArray (dir) {
   const content = []
-  const files = readdirSync(path)
+  const files = fs.readdirSync(dir)
 
   for (let i = 0; i < files.length; i++) {
-    if (files[i] !== 'index.js') content.push(require(join(path, files[i])))
+    if (files[i] !== 'index.js') content.push(require(path.join(dir, files[i])))
   }
 
   return content
@@ -25,15 +21,15 @@ function toArray (path) {
 
 /**
  * Require every js file in a directory and return an object with the filenames as keys and the exports as values
- * @param   {String} path The directory to read
- * @returns {Object}      The resulting object
+ * @param   {String} dir The directory to read
+ * @returns {Object}     The resulting object
  */
-function toObject (path) {
+function toObject (dir) {
   const content = {}
-  const files = readdirSync(path)
+  const files = fs.readdirSync(dir)
 
   for (let i = 0; i < files.length; i++) {
-    if (files[i] !== 'index.js') content[files[i].match(filenameRegex)[1]] = require(join(path, files[i]))
+    if (files[i] !== 'index.js') content[files[i].match(filenameRegex)[1]] = require(path.join(dir, files[i]))
   }
 
   return content

@@ -86,7 +86,7 @@ async function buildPanel (client, db, room, guild) {
 async function compileMessage (db, msg, level = 0) {
   if (msg.channel.type) throw Error('Invalid channel.')
 
-  const [guildData] = db('guilds')
+  const [guildData] = await db('guilds')
     .select(['channel', 'room', 'callsign'])
     .where('id', msg.channel.guild.id)
 
@@ -122,7 +122,7 @@ async function compileMessage (db, msg, level = 0) {
 async function createRoom (db, name, pass, owner, channel) {
   const [existing] = await db('rooms')
     .select('name')
-    .where(db.raw('LOWER(name) = ?', name.toLowerCase()))
+    .whereRaw('LOWER(name) = ?', name.toLowerCase())
 
   if (existing) throw Error('Name taken')
 
@@ -217,10 +217,10 @@ function joinRoom (client, db, guild, channel, room, guildCount = 0) {
       callsign: abbreviate(guild.name)
     })
     .then(transmit(client, db, {
-      room: room.name,
+      room: room,
       msg: alerts.join({ guildName: guild.name, guildsInRoom: guildCount })
     }))
-    .then(() => console(`JOIN: ${guild.id} joined \`${room}\``))
+    .then(() => console.log(`JOIN: ${guild.id} joined \`${room}\``))
 }
 
 /**
@@ -277,6 +277,7 @@ module.exports = {
   createRoom,
   deleteRoom,
   getValidChannel,
+  isTransmissionChannel,
   isValidChannel,
   joinRoom,
   leaveRoom,

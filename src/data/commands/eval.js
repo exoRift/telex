@@ -2,9 +2,7 @@ const {
   Command
 } = require('cyclone-engine')
 
-const {
-  inspect
-} = require('util')
+const util = require('util')
 
 const {
   TOKEN,
@@ -44,7 +42,7 @@ const data = {
     let output
 
     if (result instanceof Error || result instanceof Promise) output = String(result)
-    else output = inspect(result)
+    else output = util.inspect(result)
 
     return {
       embed: {

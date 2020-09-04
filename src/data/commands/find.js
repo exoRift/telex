@@ -2,7 +2,7 @@ const {
   Command
 } = require('cyclone-engine')
 
-const statuses = require('../utils/emojis.json')
+const statuses = require('../util/emojis.json')
 
 const data = {
   name: 'find',

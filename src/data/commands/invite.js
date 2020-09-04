@@ -40,7 +40,7 @@ const data = {
       if (guilds.length) {
         const guildData = guilds.find((g) => g.id === msg.channel.guild.id)
 
-        const [roomData] = agent.attachments.db('rooms')
+        const [roomData] = await agent.attachments.db('rooms')
           .select('owner')
           .where('name', guildData.room)
 
@@ -49,14 +49,14 @@ const data = {
 
           if (targetData) return `\`${target.name} is already in the room: ${targetData.room}\``
 
-          const channel = agent.attachments.getValidChannel(target)
+          const channel = agent.attachments.getValidChannel(agent.client, target)
 
           if (channel) {
             const buttons = [
               new ReactCommand({
                 emoji: ':RedTick:457860110056947712',
                 action: () => {
-                  agent.attachments.transmit({ room: guildData.room, msg: alerts.inviteDecline({ guildName: target.name }) })
+                  agent.attachments.transmit(agent.client, agent.attachments.db, { room: guildData.room, msg: alerts.inviteDecline({ guildName: target.name }) })
                     .then(() => '`Invite Declined`')
                 }
               }),
@@ -70,7 +70,7 @@ const data = {
               })
             ]
 
-            await agent.attachments.transmit({ room: guildData.room, msg: alerts.invite({ guildName: target.name }) })
+            await agent.attachments.transmit(agent.client, agent.attachments.db, { room: guildData.room, msg: alerts.invite({ guildName: target.name }) })
 
             return [
               {

@@ -1,6 +1,4 @@
-const {
-  join
-} = require('path')
+const path = require('path')
 
 const {
   SUPPORT_SERVER,
@@ -14,7 +12,7 @@ const {
 
 function pickMenu (agent, page = 1) {
   if (!isNaN(parseInt(page))) { // Help menu
-    const pkg = require(join(process.cwd(), '/package.json'))
+    const pkg = require(path.join(process.cwd(), '/package.json'))
 
     const helpMenuData = {
       desc: `${agent.client.user.username} is a bot allows you to set up rooms that servers can connect to and chat across all connected servers. Click [here](https://discordbots.org/bot/${agent.client.user.id}) to add me to your server!\n\nOnce the bot has joined a room, simply type in the assigned channel to transmit your message. [Github](${pkg.repository.url.substring(4)})`,

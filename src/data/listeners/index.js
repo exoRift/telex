@@ -1,5 +1,3 @@
-const {
-  requireDirToObject
-} = require('../utils/')
+const massRequire = require('../util/mass-require.js')
 
-module.exports = requireDirToObject(__dirname)
+module.exports = massRequire.toObject(__dirname)

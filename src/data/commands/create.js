@@ -18,7 +18,8 @@ const data = {
     }
   },
   action: async ({ agent, msg, args: [name, pass = '1234'] }) => {
-    await msg.delete().catch((ignore) => ignore)
+    if (name.length > 10) return '`Name cannot be more than 10 characters`'
+    if (pass.length > 15) return '`Password cannot be more than 15 characters`'
 
     const [guildData] = await agent.attachments.db('guilds')
       .select('room')
@@ -26,7 +27,8 @@ const data = {
 
     if (guildData) return `\`You are already in the room: ${guildData.room}\``
 
-    return agent.attachments.routines.createRoom(name, pass, msg.channel.guild.id)
+    return agent.attachments.createRoom(agent.attachments.db, name, pass, msg.channel.guild, msg.channel)
+      .then(() => msg.delete())
       .then(() => 'Successfully created a room! Time to add some guilds to it')
       .catch(() => '`A room with that name already exists`')
   }
