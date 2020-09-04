@@ -13,7 +13,7 @@ function statusMessage (editStatus, agent) {
       agent.attachments.db('rooms')
         .count()
         .then(([{ count }]) => editStatus({
-          name: 'Room count: ' + count
+          name: 'Room Count: ' + count
         }))
     },
     () => editStatus({
@@ -27,7 +27,7 @@ function statusMessage (editStatus, agent) {
   function cycleStatus () {
     statuses[pos]()
 
-    pos++
+    pos = 1 - pos
   }
 
   setInterval(cycleStatus, 300000)

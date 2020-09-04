@@ -66,7 +66,7 @@ const data = {
   name: 'help',
   desc: 'Display this menu',
   options: {
-    args: [{ name: 'page #' }]
+    args: [{ name: 'page #/command name' }]
   },
   action: ({ agent, args: [page] }) => {
     return pickMenu(agent, page)
