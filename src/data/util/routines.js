@@ -141,7 +141,7 @@ async function createRoom (db, name, pass, owner, channel) {
       callsign: abbreviate(owner.name)
     })
 
-  console.log(`CREATION: ${owner.id} created the room \`${name}\``)
+  log('creation', `${owner.id} created the room \`${name}\``)
 }
 
 /**
@@ -160,7 +160,7 @@ function deleteRoom (client, db, room, exclude) {
     .then(() => db('rooms')
       .delete()
       .where('name', room))
-    .then(() => console.log(`DELETION: \`${room}\` was deleted`))
+    .then(() => log('deletion', `\`${room}\` was deleted`))
 }
 
 /**
@@ -220,7 +220,7 @@ function joinRoom (client, db, guild, channel, room, guildCount = 0) {
       room: room,
       msg: alerts.join({ guildName: guild.name, guildsInRoom: guildCount })
     }))
-    .then(() => console.log(`JOIN: ${guild.id} joined \`${room}\``))
+    .then(() => log('join', `${guild.id} joined \`${room}\``))
 }
 
 /**
@@ -240,8 +240,12 @@ async function leaveRoom (client, db, guild) {
       .delete()
       .where('id', guild.id)
       .then(() => transmit(client, db, { room: guildData.room, msg: alerts.leave({ guildName: guild.name }) }))
-      .then(() => console.log(`LEAVE: ${guild} left \`${guildData.room}\``))
+      .then(() => log('leave', `${guild} left \`${guildData.room}\``))
   } else throw Error('Guild is not in a room')
+}
+
+function log (action, message) {
+  console.log(`[TELEX] ${action.toUpperCase()}: ${message}`)
 }
 
 /**
@@ -281,5 +285,6 @@ module.exports = {
   isValidChannel,
   joinRoom,
   leaveRoom,
+  log,
   transmit
 }

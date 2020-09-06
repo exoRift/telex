@@ -48,7 +48,7 @@ const data = {
               .delete()
               .where('id', target.id)
 
-            console.log(`KICK: ${target.id} was kicked from \`${guildData.room}\``)
+            agent.attachments.log('kick', `${target.id} was kicked from \`${guildData.room}\``)
 
             return target.name + ' was kicked from your room'
           } else return `\`${target.name} is not in your room\``
