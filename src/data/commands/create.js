@@ -6,7 +6,7 @@ const data = {
   name: 'create',
   desc: 'Create a room you can manage and add other guilds to',
   options: {
-    args: [{ name: 'name', mand: true, delim: '|' }, { name: 'pass' }],
+    args: [{ name: 'name', mand: true }, { name: 'pass' }],
     guildOnly: true,
     authLevel: 1,
     guide: {
@@ -18,6 +18,8 @@ const data = {
     }
   },
   action: async ({ agent, msg, args: [name, pass = '1234'] }) => {
+    name = name.replace(/\s/g, '')
+
     if (name.length > 10) return '`Name cannot be more than 10 characters`'
     if (pass.length > 15) return '`Password cannot be more than 15 characters`'
 

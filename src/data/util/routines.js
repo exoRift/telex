@@ -262,13 +262,11 @@ async function transmit (client, db, { room, msg, exclude = '' }) {
     .where('room', room)
     .whereNot('id', exclude)
 
-  if (channels.length) {
-    const promises = []
+  const promises = []
 
-    for (const { channel } of channels) promises.push(client.createMessage(channel, msg))
+  for (const { channel } of channels) promises.push(client.createMessage(channel, msg))
 
-    return Promise.all(promises)
-  } else throw Error('No channels to transmit')
+  return Promise.all(promises)
 }
 
 module.exports = {

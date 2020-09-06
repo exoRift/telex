@@ -12,7 +12,7 @@ const data = {
   name: 'join',
   desc: 'Join a room',
   options: {
-    args: [{ name: 'room', mand: true, delim: '|' }, { name: 'password', mand: true }],
+    args: [{ name: 'room', mand: true }, { name: 'pass', mand: true }],
     guildOnly: true,
     authLevel: 1,
     guide: {

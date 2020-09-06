@@ -22,6 +22,8 @@ const data = {
           action: async ({ agent, msg: response, args: [name], triggerResponse }) => {
             await triggerResponse.delete().catch((ignore) => ignore)
 
+            name = name.replace(/\s/g, '')
+
             const [existing] = await agent.attachments.db('rooms')
               .select('name')
               .whereRaw('LOWER(name) = ?', name.toLowerCase())
