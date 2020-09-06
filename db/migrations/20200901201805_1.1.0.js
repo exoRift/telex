@@ -10,7 +10,11 @@ exports.up = function (knex) {
       table.string('channel', 255).notNullable()
 
       table.string('room', 10).notNullable()
-      table.foreign('room').references('rooms.name')
+      table.foreign('room')
+        .references('name')
+        .inTable('rooms')
+        .onUpdate('cascade')
+        .onDelete('cascade')
 
       table.string('adminrole', 255).nullable()
       table.string('callsign', 5).notNullable()
