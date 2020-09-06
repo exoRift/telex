@@ -36,10 +36,6 @@ const data = {
               .update('name', name)
               .where('name', roomData.name)
 
-            await agent.attachments.db('guilds')
-              .update('room', name)
-              .where('room', roomData.name)
-
             await agent.attachments.transmit(agent.client, agent.attachments.db, { room: name, msg: alerts.rename({ oldName: roomData.name, newName: name }) })
 
             await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, name, msg.channel.guild.id)).catch((ignore) => ignore)

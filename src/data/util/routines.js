@@ -154,9 +154,6 @@ async function createRoom (db, name, pass, owner, channel) {
  */
 function deleteRoom (client, db, room, exclude) {
   return transmit(client, db, { room, msg: alerts.deleteRoom({ roomName: room }), exclude })
-    .then(() => db('guilds')
-      .delete()
-      .where('room', room))
     .then(() => db('rooms')
       .delete()
       .where('name', room))
