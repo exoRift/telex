@@ -73,7 +73,7 @@ agent.client.on('guildDelete', (guild) => onGuildDelete(agent.client, knex, guil
 agent.client.on('guildRoleUpdate', (guild) => onChannelUnavailable(agent.client, knex, guild))
 agent.client.on('guildRoleCreate', (guild) => onChannelUnavailable(agent.client, knex, guild))
 agent.client.on('guildRoleDelete', (guild) => onChannelUnavailable(agent.client, knex, guild))
-agent.client.on('channelUpdate', (channel) => onChannelUnavailable(agent.client, channel.guild))
-agent.client.on('channelDelete', (channel) => onChannelUnavailable(agent.client, channel.guild))
+agent.client.on('channelUpdate', (channel) => onChannelUnavailable(agent.client, knex, channel.guild))
+agent.client.on('channelDelete', (channel) => onChannelUnavailable(agent.client, knex, channel.guild))
 
 agent.connect().then(() => setTimeout(() => dbl.postStats(agent.client.guilds.size), 10000))
