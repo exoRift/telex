@@ -11,15 +11,15 @@
   "author": "exoRift",
   "license": "MIT",
   "dependencies": {
-    "cyclone-engine": "^1.4.2",
-    "dblapi.js": "^2.4.0",
+    "cyclone-engine": "^1.4.3",
+    "dblapi.js": "^2.4.1",
     "eris": "^0.13.3",
-    "knex": "^0.21.2",
-    "pg": "^8.3.0"
+    "knex": "^0.21.5",
+    "pg": "^8.3.3"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
-    "eslint": "^7.5.0",
+    "eslint": "^7.8.1",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",

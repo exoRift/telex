@@ -24,14 +24,18 @@ const data = {
                 channel: channel.id,
                 args: [{ name: 'pass', mand: true }]
               },
-              action: ({ args: [pass] }) => agent.attachments.db('rooms')
-                .update('pass', pass)
-                .where('owner', msg.channel.guild.id)
-                .then(async () => {
-                  await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, roomData.name, msg.channel.guild.id)).catch((ignore) => ignore)
+              action: ({ args: [pass] }) => {
+                if (pass.length > 15) return '`Password cannot be more than 15 characters`'
 
-                  return 'Successfully changed password'
-                })
+                return agent.attachments.db('rooms')
+                  .update('pass', pass)
+                  .where('owner', msg.channel.guild.id)
+                  .then(async () => {
+                    await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, roomData.name, msg.channel.guild.id)).catch((ignore) => ignore)
+
+                    return 'Successfully changed password'
+                  })
+              }
             })
           }
         }
