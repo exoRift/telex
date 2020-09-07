@@ -14,7 +14,7 @@
 - The announce button has been turned into a command
 - The kick button has been turned into a command
 - Names can no longer have spaces
-- Names can have a maximum of 10 characters
+- Names can have a maximum of 20 characters
 - Passwords can have a maximum of 15 characters
 - Pruning now happens daily in a separate process
 

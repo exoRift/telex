@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema
     .createTable('rooms', (table) => {
-      table.string('name', 10).primary()
+      table.string('name', 20).primary()
       table.string('pass', 15).notNullable()
       table.string('owner', 255).notNullable()
     })

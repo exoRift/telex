@@ -24,6 +24,8 @@ const data = {
 
             name = name.replace(/\s/g, '')
 
+            if (name.length > 20) return '`Name cannot be more than 20 characters`'
+
             const [existing] = await agent.attachments.db('rooms')
               .select('name')
               .whereRaw('LOWER(name) = ?', name.toLowerCase())

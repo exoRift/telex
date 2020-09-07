@@ -20,7 +20,7 @@ const data = {
   action: async ({ agent, msg, args: [name, pass = '1234'] }) => {
     name = name.replace(/\s/g, '')
 
-    if (name.length > 10) return '`Name cannot be more than 10 characters`'
+    if (name.length > 20) return '`Name cannot be more than 20 characters`'
     if (pass.length > 15) return '`Password cannot be more than 15 characters`'
 
     const [guildData] = await agent.attachments.db('guilds')
