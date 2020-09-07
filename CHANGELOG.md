@@ -3,6 +3,7 @@
 ### **New Features**
 - `|help COMMANDNAME` now brings up an expanded guide for a specific command
 - `|find` now provides an easy user mention to copy paste rather than having to add the ID manually
+- Actions pertaining to rooms are now logged for better developer support
 
 ### **Important notes**
 - `startpoll` has been changed to `poll`
@@ -12,9 +13,15 @@
 - Renamed "Management Role" to "Admin Role"
 - The announce button has been turned into a command
 - The kick button has been turned into a command
+- Names can no longer have spaces
+- Names can have a maximum of 10 characters
+- Passwords can have a maximum of 15 characters
+- Pruning now happens daily in a separate process
 
 ### **Bug Fixes**
 - Unauthorized users can no longer close polls
+- Improved general stability
+- Fixed an issue with the gif in the `ping` and `shards` commands
 
 1.0.0
 -
