@@ -9,7 +9,7 @@ exports.up = function (knex) {
       table.string('id', 255).primary()
       table.string('channel', 255).notNullable()
 
-      table.string('room', 10).notNullable()
+      table.string('room', 20).notNullable()
       table.foreign('room')
         .references('name')
         .inTable('rooms')
