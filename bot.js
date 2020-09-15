@@ -52,11 +52,9 @@ const agent = new Agent({
   },
   options: {
     intents: ['guildPresences'],
-    guildOptions: {
-      permissions: permissionQuery
-    },
+    guildOptions: permissionQuery,
     postEventFunctions: {
-      message: (msg, res) => onMessage(agent.client, knex, msg, res)
+      message: async (msg, res) => onMessage(agent.client, knex, msg, res, await agent.getTopPermissionLevel(msg.member))
     },
     statusMessage
   }
