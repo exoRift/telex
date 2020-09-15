@@ -30,6 +30,15 @@ const data = {
                 .then(async ([guildData]) => {
                   await response.delete().catch((ignore) => ignore)
 
+                  agent._guildData[msg.channel.guild.id] = {
+                    ...agent._guildData[msg.channel.guild.id],
+                    permissions: role
+                      ? {
+                        [role.id]: 1
+                      }
+                      : {}
+                  }
+
                   await msg.edit(await agent.attachments.buildPanel(agent.client, agent.attachments.db, guildData.room, msg.channel.guild.id)).catch((ignore) => ignore)
                 })
             } else return `\`Could not find a role named "${name}"\``

@@ -31,9 +31,11 @@ const knex = new Knex(knexConfig)
 const permissionQuery = knex('guilds')
   .select('id', 'adminrole')
   .then((data) => data.reduce((acc, { id, adminrole }) => {
-    acc[id] = {
-      permissions: {
-        [adminrole]: 1
+    if (adminrole) {
+      acc[id] = {
+        permissions: {
+          [adminrole]: 1
+        }
       }
     }
 
