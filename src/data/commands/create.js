@@ -32,7 +32,10 @@ const data = {
     return agent.attachments.createRoom(agent.attachments.db, name, pass, msg.channel.guild, msg.channel)
       .then(() => msg.delete())
       .then(() => 'Successfully created a room! Time to add some guilds to it')
-      .catch(() => '`A room with that name already exists`')
+      .catch((err) => {
+        if (err.message === 'name taken') return '`A room with that name already exists`'
+        else throw err
+      })
   }
 }
 

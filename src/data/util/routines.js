@@ -11,7 +11,7 @@ const alerts = require('./alerts/')
  * @returns {String}      The abbreviated result
  */
 function abbreviate (name) {
-  return name.split(' ').reduce((a, w) => a + w[0], '')
+  return name.split(' ').reduce((a, w) => a + w[0], '').substring(0, 5)
 }
 
 /**
@@ -124,7 +124,7 @@ async function createRoom (db, name, pass, owner, channel) {
     .select('name')
     .whereRaw('LOWER(name) = ?', name.toLowerCase())
 
-  if (existing) throw Error('Name taken')
+  if (existing) throw Error('name taken')
 
   await db('rooms')
     .insert({
