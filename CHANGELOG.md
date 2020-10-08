@@ -1,3 +1,9 @@
+1.2.0
+-
+### **Bug fixes**
+- Fixed issue where rank badges wouldn't display properly
+- Fixed issue where guilds with long names couldn't create rooms due to callsign issues
+
 1.1.0
 -
 ### **New Features**
