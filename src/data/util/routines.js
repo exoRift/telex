@@ -5,6 +5,8 @@ const {
 
 const alerts = require('./alerts/')
 
+const jumpLinkRegex = /https:\/\/discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)\/?/
+
 /**
  * Abbreviate a name
  * @param   {String} name The name to abbreviate
@@ -71,6 +73,42 @@ async function buildPanel (client, db, room, guild) {
           removeReaction: true
         }
       })
+    }
+  }
+}
+
+function checkJumpLink (msg) {
+  const match = msg.content.match(jumpLinkRegex)
+
+  if (match !== null) {
+    const [
+      full,
+      guild,
+      channel,
+      message
+    ] = match
+
+    if (guild === msg.channel.guild.id) {
+      const target = msg.channel.guild.channels.get(channel).messages.get(message)
+
+      if (target) {
+        msg.channel.createMessage({
+          embed: {
+            author: {
+              name: target.author.username,
+              url: full, /* Switch to Message.jumpLink when released */
+              icon_url: target.author.avatarURL
+            },
+            description: target.content,
+            color: 0x00B0F4,
+            footer: {
+              icon_url: target.channel.guild.iconURL,
+              text: '#' + target.channel.name
+            },
+            timestamp: new Date(target.timestamp)
+          }
+        })
+      }
     }
   }
 }
@@ -277,6 +315,7 @@ async function transmit (client, db, { room, msg, exclude = '' }) {
 module.exports = {
   abbreviate,
   buildPanel,
+  checkJumpLink,
   compileMessage,
   createRoom,
   deleteRoom,
