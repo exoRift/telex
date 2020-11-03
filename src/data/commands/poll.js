@@ -16,18 +16,18 @@ const data = {
   name: 'poll',
   desc: 'Initiate a room-wide poll that lasts 10 minutes (Choices separated by spaces)',
   options: {
-    args: [{ name: 'name', mand: true, delim: '|' }, { name: 'choices', mand: true }],
+    args: [{ name: 'name', mand: true, delim: '|' }, { name: 'choices', mand: true, delim: '|' }, { name: 'timeout (minutes)' }],
     guildOnly: true,
     authLevel: 1,
     guide: {
       color: 0x7777FF,
       fields: [{
         name: 'Polling across multiple servers',
-        value: 'Provide the name of the poll and the choices\nThe name is separated from the choices with a bar (`|`)\nChoices are separated by spaces\nPolls last for an hour or until they\'re manually closed'
+        value: 'Provide the name of the poll and the choices\nThe name is separated from the choices with a bar (`|`)\nChoices are separated by spaces\nPolls last for an hour by default or until they\'re manually closed\nThe timeout argument is in minutes'
       }]
     }
   },
-  action: async ({ agent, msg, args: [name, choices] }) => {
+  action: async ({ agent, msg, args: [name, choices, timeout = 60] }) => {
     const currentGuildSubquery = agent.attachments.db('guilds')
       .select('room')
       .where('id', msg.channel.guild.id)
@@ -72,7 +72,7 @@ const data = {
         }
       }, 8000)
 
-      const autoClose = setTimeout(() => closePoll(), 600000)
+      const autoClose = setTimeout(() => closePoll(), timeout * 60000)
 
       const closePoll = () => {
         clearInterval(refresh)

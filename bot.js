@@ -49,7 +49,11 @@ const agent = new Agent({
     commands,
     reactCommands: [],
     options: {
-      prefix: PREFIX
+      prefix: PREFIX,
+      replacerBraces: {
+        open: '[',
+        close: ']'
+      }
     }
   },
   options: {
