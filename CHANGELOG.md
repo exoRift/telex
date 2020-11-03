@@ -1,6 +1,7 @@
 1.2.0
 -
 ### **Bug fixes**
+- Fixed issue where adminrole would not update properly
 - Fixed issue where rank badges wouldn't display properly
 - Fixed issue where guilds with long names couldn't create rooms due to callsign issues
 
