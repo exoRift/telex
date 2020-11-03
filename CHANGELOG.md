@@ -1,6 +1,13 @@
 1.2.0
 -
-### **Bug fixes**
+### **New Features**
+- You can now choose the length of a poll
+- Linking to a message will now quote it. (This can be turned off in the new guild settings)
+
+### **Important Notes**
+- The `create` command no longer has a default for the `pass` argument
+
+### **Bug Fixes**
 - Fixed issue where adminrole would not update properly
 - Fixed issue where rank badges wouldn't display properly
 - Fixed issue where guilds with long names couldn't create rooms due to callsign issues
@@ -12,7 +19,7 @@
 - `|find` now provides an easy user mention to copy paste rather than having to add the ID manually
 - Actions pertaining to rooms are now logged for better developer support
 
-### **Important notes**
+### **Important Notes**
 - `startpoll` has been changed to `poll`
 - Rooms are now created with the `create` command
 - "Abbreviations" have been renamed to "Callsigns"
@@ -35,22 +42,22 @@
 # Rebranding
 Guildlink has been rebranded to be Telex
 
-### **New features**
+### **New Features**
 - Changing the transmission channel now supports channel mentions rather than just the name
 - Added the ability to initiate a room-wide poll (Looking at you, gaming/faction groups)
 - The `find` command now uses a bar delimiter for users with spaces in their name
 - Any server in a room can now initiate a poll
 
-### **Quality of life**
+### **Quality of Life**
 - Upgraded to Cyclone 1.3.0
 - The status message now alternates between the prefix and room count
 - Severval features are now faster
 
-### **Important notes**
+### **Important Notes**
 - Tweaked the look of invite cards
 - Added a check for DM permissions when the password is being changed
 
-### **Bug fixes**
+### **Bug Fixes**
 - Added failsafe for when an invite is accepted while already in a room
 
 ### **Removed**
