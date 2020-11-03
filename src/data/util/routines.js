@@ -241,6 +241,11 @@ async function leaveRoom (client, db, guild) {
   } else throw Error('Guild is not in a room')
 }
 
+/**
+ * Log actions to the console
+ * @param {String} action  The action
+ * @param {String} message The message to log
+ */
 function log (action, message) {
   console.log(`[TELEX] ${action.toUpperCase()}: ${message}`)
 }

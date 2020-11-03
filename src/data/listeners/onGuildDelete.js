@@ -19,7 +19,9 @@ async function onGuildDelete (client, db, guild) {
       .select('owner')
       .where('name', guildData.room)
 
-    if (guild.id === roomData.owner) return routines.deleteRoom(client, db, guildData.room, guild.id)
+    routines.log('prune', `Guild ${guild.id} pruned (Deleted)`)
+
+    if (guild.id === roomData.owner) routines.deleteRoom(client, db, guildData.room, guild.id)
     else routines.leaveRoom(client, db, guild.id)
   }
 }

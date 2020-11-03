@@ -30,6 +30,8 @@ async function onChannelUnavailable (client, db, guild) {
           .select('owner')
           .where('name', guildData.room)
 
+        routines.log('prune', `Guild ${guild.id} pruned (No available channel)`)
+
         if (guild.id === roomData.owner) routines.deleteRoom(client, db, guildData.room, guild.id)
         else routines.leaveRoom(client, db, guild.id)
       }
