@@ -96,10 +96,9 @@ function checkJumpLink (msg) {
           embed: {
             author: {
               name: target.author.username,
-              url: full, /* Switch to Message.jumpLink when released */
               icon_url: target.author.avatarURL
             },
-            description: target.content,
+            description: target.content + `\n\n[[Jump!]](${full})`, /* Switch to Message.jumpLink when released */
             color: 0x00B0F4,
             footer: {
               icon_url: target.channel.guild.iconURL,
