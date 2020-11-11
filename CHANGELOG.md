@@ -1,3 +1,9 @@
+1.2.0
+# Persistent Guild Data Update
+
+### **New Features
+- Linking to a message will now quote it. (This can be turned off in the new guild settings)
+
 1.1.1
 -
 ### **New Features**
