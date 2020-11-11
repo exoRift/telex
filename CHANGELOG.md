@@ -1,8 +1,7 @@
-1.2.0
+1.1.1
 -
 ### **New Features**
 - You can now choose the length of a poll
-- Linking to a message will now quote it. (This can be turned off in the new guild settings)
 
 ### **Important Notes**
 - The `create` command no longer has a default for the `pass` argument
