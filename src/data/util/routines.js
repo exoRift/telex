@@ -5,8 +5,6 @@ const {
 
 const alerts = require('./alerts/')
 
-const jumpLinkRegex = /https:\/\/discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)\/?/
-
 /**
  * Abbreviate a name
  * @param   {String} name The name to abbreviate
@@ -77,39 +75,34 @@ async function buildPanel (client, db, room, guild) {
   }
 }
 
-function checkJumpLink (msg) {
-  const match = msg.content.match(jumpLinkRegex)
+/**
+ * Generate a quote embed from a message
+ * @param   {Eris}            client    The Eris client
+ * @param   {String}          channelID The ID of the channel
+ * @param   {String}          messageID The ID of the messsage
+ * @param   {String}          link      The link to the message
+ * @returns {Promise<Object>}           The resulting embed
+ */
+async function buildQuote (client, channelID, messageID, link) {
+  const msg = await client.getMessage(channelID, messageID)
 
-  if (match !== null) {
-    const [
-      full,
-      guild,
-      channel,
-      message
-    ] = match
-
-    if (guild === msg.channel.guild.id) {
-      const target = msg.channel.guild.channels.get(channel).messages.get(message)
-
-      if (target) {
-        msg.channel.createMessage({
-          embed: {
-            author: {
-              name: target.author.username,
-              icon_url: target.author.avatarURL
-            },
-            description: target.content + `\n\n[[Jump!]](${full})`, /* Switch to Message.jumpLink when released */
-            color: 0x00B0F4,
-            footer: {
-              icon_url: target.channel.guild.iconURL,
-              text: '#' + target.channel.name
-            },
-            timestamp: new Date(target.timestamp)
-          }
-        })
+  if (msg) {
+    return {
+      embed: {
+        author: {
+          name: msg.author.username,
+          icon_url: msg.author.avatarURL
+        },
+        description: msg.content + `\n\n[[Jump!]](${link})`, /* Switch to Message.jumpLink when released */
+        color: 0x00B0F4,
+        footer: {
+          icon_url: msg.channel.guild.iconURL,
+          text: '#' + msg.channel.name
+        },
+        timestamp: new Date(msg.timestamp)
       }
     }
-  }
+  } else throw Error('Message not found')
 }
 
 /**
@@ -314,7 +307,7 @@ async function transmit (client, db, { room, msg, exclude = '' }) {
 module.exports = {
   abbreviate,
   buildPanel,
-  checkJumpLink,
+  buildQuote,
   compileMessage,
   createRoom,
   deleteRoom,

@@ -1,8 +1,8 @@
 1.2.0
-# Persistent Guild Data Update
+# Webhook Update
 
 ### **New Features
-- Linking to a message will now quote it. (This can be turned off in the new guild settings)
+- You can now quote messages with the `quote` command
 
 1.1.1
 -

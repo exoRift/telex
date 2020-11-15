@@ -12,8 +12,6 @@ const {
  * @param {Number}         [level=0] The permission level of the author
  */
 async function onMessage (client, db, msg, res, level = 0) {
-  // await routines.checkJumpLink(msg)
-
   if (res && res.command) console.log(`[COMMAND] ${msg.timestamp} - **${msg.author.username}** > *${res.command.name || 'AWAIT'}*`)
   else if ((msg.content || msg.attachments.length) && !msg.type && await routines.isTransmissionChannel(db, msg.channel)) {
     return routines.compileMessage(db, msg, level)
